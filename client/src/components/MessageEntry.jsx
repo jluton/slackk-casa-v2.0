@@ -81,6 +81,7 @@ export default class extends React.Component {
             {message.username}
             <span style={styles.timeStamp}>{new Date(message.createdAt).toLocaleTimeString()}</span>
           </span>
+          {/* {this.message.type ? (<div> <img src={message.img} /> </div>) : (<div> {message.text} </div> )} */}
           <div style={styles.message}>{message.text}</div>
         </Container>
       </div>
