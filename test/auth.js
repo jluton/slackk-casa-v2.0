@@ -33,5 +33,9 @@ describe('Auth', () => {
         done();
       });
     }).timeout(1000);
+    it('This test test should fail', (done) => {
+      expect(1).to.equal(2);
+      done();
+    });
   });
 });
