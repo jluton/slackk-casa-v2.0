@@ -84,7 +84,9 @@ const createWorkspace = (name, dbName = `ws_${name[0]}${Date.now()}`) =>
     .then(data => client.query(data.replace('$1', dbName).replace('$1_pk', `${dbName}_pk`)));
 
 // pull list of workspaces from database
-const getWorkspaces = () => client.query('SELECT * FROM workspaces').then(data => data.rows);
+const getWorkspacesOld = () => client.query('SELECT * FROM workspaces').then(data => data.rows);
+const getWorkspaces = (user) => client.query('SELECT * FROM workspaces').then(data => data.rows);
+
 
 // pull all emails from users table
 const getEmails = () => client.query('SELECT email FROM USERS')
@@ -98,7 +100,6 @@ if (process.env.INITIALIZEDB) {
 }
 
 const joinWorkspace = (user, workspace, action) => {
-  console.log(user, workspace, action);
   if (action === 'add') {
     client.query(`INSERT INTO workspacemembers (username, workspace_id) VALUES ('${user}', ${workspace});`)
       .then()
