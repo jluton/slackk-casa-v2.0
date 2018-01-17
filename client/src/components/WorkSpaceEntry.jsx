@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 export default class WorkSpaceEntry extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { joined: false };
   }
 
   handleClick(event) {
@@ -16,10 +16,19 @@ export default class WorkSpaceEntry extends Component {
     changeCurrentWorkSpace(workSpace.id, workSpace.name);
   }
 
+  handleJoinClick(event) {
+    let { handleFail, changeCurrentWorkSpace, workSpace, currentUser} = this.props;
+    handleFail();
+    this.setState({ joined: !this.state.joined });
+    console.log(currentUser)
+  }
+
+
   render() {
     let { workSpace, currentWorkSpaceId } = this.props;
     return (
       <div className="workSpace-entry-container">
+
         {workSpace.id === currentWorkSpaceId ? (
           <h5
             className="workSpace-name highlight-workSpace"
@@ -34,6 +43,9 @@ export default class WorkSpaceEntry extends Component {
             # {workSpace.name}
           </h5>
         )}
+        <button onClick={event => this.handleJoinClick(event)}>
+          {this.state.joined ? 'Leave' : 'Join'}
+        </button>
       </div>
     );
   }

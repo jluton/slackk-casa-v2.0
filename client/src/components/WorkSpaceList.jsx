@@ -44,7 +44,7 @@ export default class WorkSpaceList extends Component {
   }
   //renders everything to do with workspaces, including creation
   render() {
-    let { changeCurrentWorkSpace, currentWorkSpaceId, workSpaces } = this.props;
+    let { changeCurrentWorkSpace, currentWorkSpaceId, workSpaces, currentUser } = this.props;
     let { createFail, createStatus, workSpaceQuery } = this.state;
     return (
       <div>
@@ -66,6 +66,8 @@ export default class WorkSpaceList extends Component {
             key={workSpace.id}
             changeCurrentWorkSpace={changeCurrentWorkSpace}
             currentWorkSpaceId={currentWorkSpaceId}
+            currentUser={currentUser}
+
           />
         ))}
         <br />

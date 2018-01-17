@@ -86,6 +86,7 @@ export default class App extends React.Component {
           loadWorkSpaces={() => this.loadWorkSpaces()}
           changeCurrentWorkSpace={(id, name) => this.changeCurrentWorkSpace(id, name)}
           currentWorkSpaceId={currentWorkSpaceId}
+          currentUser={this.props.location.state.username}
         />
         <div className="input-container">
           <Input
