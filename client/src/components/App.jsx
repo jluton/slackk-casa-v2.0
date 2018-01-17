@@ -58,10 +58,9 @@ export default class App extends React.Component {
         query: '',
       });
     }
-
-
   }
-  //grabs all existing workspaces
+
+  // grabs all existing workspaces
   loadWorkSpaces() {
     fetch('/workspaces')
       .then(resp => resp.json())
@@ -69,13 +68,13 @@ export default class App extends React.Component {
       .catch(console.error);
   }
 
-  //Helper function to reassign current workspace
+  // Helper function to reassign current workspace
   changeCurrentWorkSpace(id, name) {
     this.setState({ currentWorkSpaceId: id, currentWorkSpaceName: name });
   }
-  //renders nav bar, body(which contains all message components other than input), and message input
+  // renders nav bar, body(which contains all message components other than input), and message input
   render() {
-    let {
+    const {
       messages, query, workSpaces, currentWorkSpaceId, currentWorkSpaceName,
     } = this.state;
     return (
