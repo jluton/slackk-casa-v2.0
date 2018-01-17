@@ -35,11 +35,8 @@ const postMessage = (message, username, workspaceId) =>
     // post new message into workspace's messages table
     .then(data =>
       client.query(
-        'INSERT INTO $db_name (text, username) VALUES ($1, $2) RETURNING *'.replace(
-          '$db_name',
-          data.rows[0].db_name,
-        ),
-        [message, username],
+        'INSERT INTO messages (text, username, workspace_id) VALUES ($1, $2, $3) RETURNING *',
+        [message, username, data.rows[0].db_name],
       ));
 
 // get messages for workspace from database
@@ -48,7 +45,7 @@ const getMessages = workspaceId =>
   client
     .query('SELECT db_name FROM workspaces WHERE id = $1', [workspaceId])
     // pull messages from workspace's messages table
-    .then(data => client.query('SELECT * FROM $db_name'.replace('$db_name', data.rows[0].db_name)))
+    .then(data => client.query('SELECT * FROM messages where workspace_id = $1;', [data.rows[0].db_name]))
     .then(data => data.rows);
 
 // post new user to users table in database
