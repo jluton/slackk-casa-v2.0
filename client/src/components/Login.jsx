@@ -19,6 +19,7 @@ export default class Login extends React.Component {
     if (username === '') {
       return this.setState({ loginStatus: 'Enter a username' });
     }
+    console.log(typeof password);
     fetch('/login', {
       method: 'POST',
       body: JSON.stringify({ username, password }),
@@ -147,39 +148,9 @@ export default class Login extends React.Component {
                 Forgot your password? Click here
               </Button>
             </div>
-            <div>
-              <Button onClick={notifyMe} > </Button>
-            </div>
           </div>
         )}
       </div>
     );
   }
 }
-
-const notifyMe = function() {
-// Let's check if the browser supports notifications
-  if (!("Notification" in window)) {
-    console.log("This browser does not support desktop notification");
-  }
-
-  // Let's check whether notification permissions have already been granted
-  else if (Notification.permission === "granted") {
-    // If it's okay let's create a notification
-    var notification = new Notification("Hi there!");
-    console.log('notification created');
-  }
-
-  // Otherwise, we need to ask the user for permission
-  else if (Notification.permission !== "denied") {
-    Notification.requestPermission(function (permission) {
-      // If the user accepts, let's create a notification
-      if (permission === "granted") {
-        var notification = new Notification("Hi there!");
-      }
-    });
-  }
-
-// At last, if the user has denied notifications, and you 
-// want to be respectful there is no need to bother them any more.
-};
