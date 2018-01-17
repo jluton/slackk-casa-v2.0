@@ -14,7 +14,4 @@ install:
 before_script:
 - psql -c "CREATE DATABASE slackkcasa;" -U postgres
 - psql -c "CREATE USER test WITH PASSWORD 'test';" -U postgres
-script:
-- webpack -p
-- npm start
-- npm run test
+script: webpack -p & npm start & npm run test
