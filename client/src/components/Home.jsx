@@ -13,7 +13,23 @@ export default () => {
       textAlign: 'center',
     },
   };
-  //<Link> tags direct requests
+
+  // Ask client for permission to send browser notifications
+  if ('Notification' in window && Notification.permission !== "granted") {
+    Notification.requestPermission().then((result) => {
+      if (result === 'denied') {
+        console.log('Permission wasn\'t granted. Allow a retry.');
+        return;
+      }
+      if (result === 'default') {
+        console.log('The permission request was dismissed.');
+        return;
+      }
+      console.log('Permission was granted.');
+    });
+  }
+
+  // <Link> tags direct requests
   return (
     <Container style={styles.body}>
       <Link style={{ textDecoration: 'none' }} to="">
