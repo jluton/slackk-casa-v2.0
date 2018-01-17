@@ -1,13 +1,17 @@
 language: node_js
 node_js:
-  - "stable"
+- stable
+deploy:
+  provider: heroku
+  api_key:
+    secure: dZOVQcJx2o1870cPZxNbU5sNu0tO1msCebMEMez92FnQaEgXvseTYygCY79oG/Agehft7F0UQU6F3B+I8REt+Pe8EI7YM77XqhmZl2lYL0Q+xWokdil/1tqmOha5P5HjdycBCHV1yQadpvlZWvzGPoovys4vnuUGJ1zqEx9q5lLU+xN/ThRs+3O5TKji91whbMLpr1kMRrXUpl1ZaCBfITjaG/Iaab8BL7KtjpwwcUrm4UdjiSEpnHO4SDuS7KqMtfvCPQ3UREF/WqwPUaAyhg+urHimQJqUDse4xSlpi03EpWi67dNDwX0Sh8lATfQZMJOkc5mhTT9P78GUMxAmpn1t+/CoRwH7KKARS7xOMpM59gPSpvQtKEIe+9M0XEtqgx7C2OD0/Vdj9jECd8pOZFInxT1mTyYA9tsYWKtWa503wt3F6G6RcXrqqSp9u7RnuRh2vMgTuMCjaILrxDTjaY6Rd7a+ZlWMfSBKvk/c1iGcJAljoIUdVYA25w3qwb0sSyiSGN7JK1U9bn+262t50a9WQKp1UO7z85gOuOj6BKesaoXklmM1vv2ZTaJfFkl6X+gWIEDLqHGUVLjfR3z7aLiG3YbnuBjqBgqUQ+kcVshnyaQJhs1FkrXN88+w0pew76x9FJISRcwdX25AEuLtsqaA2q3RoGkUKIn0j+OAj6A=
 before_install:
-  - export DATABASE_URL="postgresql://test:test@localhost/slackkcasa"
-  - export NPM_CONFIG_PRODUCTION=false
-  - export INITIALIZEDB=true
+- export DATABASE_URL="postgresql://test:test@localhost/slackkcasa"
+- export NPM_CONFIG_PRODUCTION=false
+- export INITIALIZEDB=true
 install:
-  - npm install
-  - webpack -p
+- npm install
 before_script:
-  - psql -c "CREATE DATABASE slackkcasa;" -U postgres
-  - psql -c "CREATE USER test WITH PASSWORD 'test';" -U postgres
+- psql -c "CREATE DATABASE slackkcasa;" -U postgres
+- psql -c "CREATE USER test WITH PASSWORD 'test';" -U postgres
+script: webpack -p & npm start & npm run test

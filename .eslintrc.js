@@ -1,7 +1,9 @@
 module.exports = {
   extends: './node_modules/eslint-config-airbnb/index.js',
   rules: {
-    'prefer-const': 0,
-    'no-console': 0,
+    "func-names": "off",
+    "import/extensions": "off",
+    "react/prefer-stateless-function": "off",
+    "no-plusplus": "off",
   },
 };
