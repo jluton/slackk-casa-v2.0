@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Button } from 'reactstrap';
 import { getWorkSpaceMessagesFromServer } from '../socketHelpers/index.js';
 import PropTypes from 'prop-types';
+const axios = require('axios');
 
 export default class WorkSpaceEntry extends Component {
   constructor(props) {
@@ -17,18 +18,24 @@ export default class WorkSpaceEntry extends Component {
   }
 
   handleJoinClick(event) {
-    let { handleFail, changeCurrentWorkSpace, workSpace, currentUser} = this.props;
+    let { handleFail, workSpace, currentUser } = this.props;
     handleFail();
     this.setState({ joined: !this.state.joined });
-    console.log(currentUser)
+    const body = {
+      ws: workSpace.id,
+      user: currentUser,
+      action: this.state.joined ? 'drop' : 'add',
+    };
+    console.log(body)
+    axios.post('/workspaces/membership', body)
+      .then(console.log)
+      .catch(console.log);
   }
-
 
   render() {
     let { workSpace, currentWorkSpaceId } = this.props;
     return (
       <div className="workSpace-entry-container">
-
         {workSpace.id === currentWorkSpaceId ? (
           <h5
             className="workSpace-name highlight-workSpace"
