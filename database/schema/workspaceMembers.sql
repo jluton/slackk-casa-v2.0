@@ -1,7 +1,7 @@
-CREATE TABLE IF NOT EXISTS "workspaceMembers" (
+CREATE TABLE IF NOT EXISTS "workspacemembers" (
 	"id" serial NOT NULL,
-  "user_id" INT not NULL,
-	"channel_id" INT NOT NULL UNIQUE,
+  "username" varchar(60) not NULL,
+	"workspace_id" INT NOT NULL,
 	CONSTRAINT channels_members_pk PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE

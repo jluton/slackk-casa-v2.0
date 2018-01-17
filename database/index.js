@@ -97,6 +97,22 @@ if (process.env.INITIALIZEDB) {
     .catch(err => console.error('error creating database tables, ', err.stack));
 }
 
+const joinWorkspace = (user, workspace, action) => {
+  console.log(user, workspace, action);
+  if (action === 'add') {
+    client.query(`INSERT INTO workspacemembers (username, workspace_id) VALUES ('${user}', ${workspace});`)
+      .then()
+      .catch(err => console.error('error adding user to workspaceMembers, ', err.stack));
+  } else if (action === 'drop') {
+    client.query(`DELETE FROM workspacemembers
+      WHERE username = '${user}' AND workspace_id = ${workspace};`)
+      .then()
+      .catch(err => console.error('error removing user from workspaceMembers, ', err.stack));
+  } else {
+    throw new Error('Invalid action');
+  }
+};
+
 module.exports = {
   client,
   initializeDB,
@@ -108,4 +124,5 @@ module.exports = {
   getWorkspaces,
   getEmails,
   getPasswordHint,
+  joinWorkspace,
 };
