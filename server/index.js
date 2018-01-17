@@ -2,7 +2,12 @@ const express = require('express');
 const WebSocket = require('ws');
 const router = require('./routes');
 const { onConnect } = require('./webSocket');
+<<<<<<< HEAD
 require('dotenv').config();
+=======
+require('dotenv').config()
+
+>>>>>>> added dotenv for db to run
 
 const PORT = process.env.PORT || 3000;
 
