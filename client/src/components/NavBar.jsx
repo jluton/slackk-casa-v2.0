@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-const axios = require('axios');
-
+import AddUser from './AddUser.jsx';
 
 import {
   Collapse,
@@ -17,6 +16,9 @@ import {
   DropdownMenu,
   DropdownItem,
 } from 'reactstrap';
+
+const axios = require('axios');
+
 
 export default class NavBar extends React.Component {
   constructor(props) {
@@ -55,7 +57,6 @@ export default class NavBar extends React.Component {
   }
 
   handleJoinClick(event) {
-    console.log(this.state)
     let { currentUser, currentWorkSpaceId } = this.props;
     // this.setState({ joined: !this.state.joined });
     let body = {
@@ -63,7 +64,6 @@ export default class NavBar extends React.Component {
       user: currentUser,
       action: this.state.joined ? 'drop' : 'add',
     };
-    console.log(body);
     axios.post('/workspaces/membership', body)
       .then(console.log)
       .catch(console.log);
@@ -81,6 +81,7 @@ export default class NavBar extends React.Component {
         <button onClick={event => this.handleJoinClick(event)}>
           {this.state.joined ? 'Leave' : 'Join'}
         </button>
+        <AddUser currentWorkSpaceId={this.props.currentWorkSpaceId} />
         <NavbarToggler onClick={this.toggle} />
         <Collapse isOpen={this.state.isOpen} navbar>
           <Nav className="ml-auto" navbar>

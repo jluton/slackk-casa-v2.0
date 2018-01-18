@@ -112,7 +112,14 @@ const isInWorkspace = (user, workspace) => {
   return client.query(`select workspace_id from workspacemembers
     WHERE username = '${user}' AND workspace_id = ${workspace};`)
     .then(x => x.rows.length > 0)
-    .catch(err => console.err(err.stack));
+    .catch(err => console.error(err.stack));
+}
+
+const getMembers = (workspace) => {
+  return client.query(`select username from workspacemembers
+    WHERE workspace_id = ${workspace};`)
+    .then(data => data.rows.map(row => row.username))
+    .catch(err => console.error(err.stack));
 }
 
 if (process.env.INITIALIZEDB) {
@@ -134,4 +141,5 @@ module.exports = {
   getPasswordHint,
   joinWorkspace,
   isInWorkspace,
+  getMembers,
 };
