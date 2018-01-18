@@ -37,7 +37,7 @@
 /* bootstrap form control class
    send message */
 .message-input-box {
-  height: 50%;
+  height: 20%;
 }
 
 .message-entry-container {
@@ -79,4 +79,8 @@
 .highlight-workSpace {
   background-color: #4c9689;
   color: #ffffff;
+}
+
+img#messageEntry {
+  height:200px;
 }

@@ -3,17 +3,23 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const path = require('path');
-
+const multer = require('multer');
 const db = require('../database');
 const auth = require('./auth');
 const passport = require('./passport');
 const email = require('./email');
-
+const aws = require('../server/aws.js');
 /*
   Express routes
 */
 
 const router = express.Router();
+
+var storage = multer.memoryStorage()
+var upload = multer({
+  storage: storage,
+  limits:{fileSize: 2000000},
+}).single('file')
 
 router.use(cookieParser());
 router.use(session({ secret: 'slackk-casa', resave: false, saveUninitialized: false }));
@@ -145,5 +151,37 @@ router.post('/workspaces', async (req, res) => {
     return res.status(500).json(err.stack);
   }
 });
+
+// POST request to /upload, used to upload file
+/*
+  Request object from client:
+  {
+
+  }
+
+  Server response status codes:
+    - 201 - File successfuly uploaded
+    - 400 - File already exists
+    - 500 - Database error, all other errors
+*/
+
+router.post('/upload', (req, res) => {
+  upload(req, res, (err) => {
+    if (err) {
+      console.log(err);
+    } else {
+      let { originalname } = req.file;
+      aws.awsUploader(originalname, req.file.buffer, () => {
+      originalname = originalname.split(' ').join('+')
+      res.send(`https://s3-us-west-1.amazonaws.com/reslack/${originalname}`);
+      })
+    }
+  })
+})
+
+
+
+
+
 
 module.exports = router;
