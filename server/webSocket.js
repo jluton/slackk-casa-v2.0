@@ -43,28 +43,7 @@ const onMessage = async (ws, wss, data) => {
   switch (message.method) {
     case 'GETMESSAGES':
     // method GETMESSAGES returns a list of previous messages for the given workspaceId
-    /*
-    Request from client to server:
-    {
-      method: 'GETMESSAGES',
-      data: {
-        workspaceId: 1, //request workspace's id
-      }
-    }
-
-    Response from server to client:
-    {
-      code: 200,
-      message: 'Request success',
-      method: 'GETMESSAGES',
-      data: [{  //return an array of message objects from the requested workspace
-        id: 1,
-        text: 'this is a test message',
-        username: 'testUser',
-        createdAt: '2018-01-15T20:15:29.269Z',
-      }, ...],
-    }
-    */
+    
       try {
         const messages = await db.getMessages(Number(message.data.workspaceId));
         // respond back to client with success response and list of messages if successfully pulled from database
@@ -75,56 +54,24 @@ const onMessage = async (ws, wss, data) => {
       }
     case 'POSTMESSAGE':
     // method POSTMESSAGE posts a message to the workspace for the given workspaceId
-    /*
-    Request from client to server:
-    {
-      method: 'POSTMESSAGE',
-      data: {
-        text: 'test message',
-        username: 'testUser',
-        workspaceId: 1, //workspace id to post messsage to
-      }
-    }
-
-    Response from server to client:
-    {
-      code: 200,
-      message: 'Post success',
-      method: 'POSTMESSAGE',
-      data: {  //return back the successfully posted message object
-        id: 1,
-        text: 'test message',
-        username: 'testUser',
-        createdAt: '2018-01-15T20:15:29.269Z',
-      },
-    }
-    */
       try {
+
+          let special_type = null;
+          if (message.data.text.slice(0, 5) === '/poll') {
+            special_type = 'poll';
+          }
+
         // post the given message to the database
         let postedMessage = await db.postMessage(
           message.data.text,
           message.data.username,
           message.data.workspaceId,
+          special_type
         );
         [postedMessage] = postedMessage.rows;
         // respond back to client with success response and list of messages if successfully posted to the database
         ws.send(response(201, 'Post success', message.method, postedMessage));
         // notify all other connected clients that a new message has been posted with a NEWMESSAGE response
-        /*
-        Request from server to client:
-        {
-          method: 'NEWMESSAGE',
-          data: {  //send the new message to all other clients along with workspaceId of message
-            message: {
-              id: 1,
-              text: 'test message',
-              username: 'testUser',
-              createdAt: '2018-01-15T20:15:29.269Z',
-            },
-            workspaceId: 1,
-          },
-        }
-        */
         return updateEveryoneElse(
           ws,
           wss,
