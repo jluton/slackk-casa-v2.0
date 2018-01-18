@@ -84,6 +84,7 @@ export default class App extends React.Component {
         username: this.props.location.state.username,
         text: this.state.query,
         workspaceId: this.state.currentWorkSpaceId,
+        isImage: false,
       });
       // resets text box to blank string
       this.setState({
