@@ -8,6 +8,7 @@ var bucketName = 'reslack';
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 // var path = '../client/dist/images/twitter-egg.png';
 =======
 var path = '../client/dist/images/twitter-egg.png';
@@ -15,6 +16,9 @@ var path = '../client/dist/images/twitter-egg.png';
 =======
 // var path = '../client/dist/images/twitter-egg.png';
 >>>>>>> Adjusting the routes back to normal
+=======
+// var path = '../client/dist/images/twitter-egg.png';
+>>>>>>> 371c5a19b139adfc539a83139eb4b54dee2a12c8
 
 // awsUploader
 /*

@@ -172,6 +172,29 @@ router.post('/workspaces/check', bodyParser.json(), async (req, res) => {
     return res.status(404).json(err.stack);
   }
 });
+// POST request to /upload, used to upload file
+/*
+  Request object from client:
+  {
+  }
+  Server response status codes:
+    - 201 - File successfuly uploaded
+    - 400 - File already exists
+    - 500 - Database error, all other errors
+*/
 
+router.post('/upload', (req, res) => {
+  upload(req, res, (err) => {
+    if (err) {
+      console.log(err);
+    } else {
+      let { originalname } = req.file;
+      aws.awsUploader(originalname, req.file.buffer, () => {
+      originalname = originalname.split(' ').join('+')
+      res.send(`https://s3-us-west-1.amazonaws.com/reslack/${originalname}`);
+      })
+    }
+  })
+})
 
 module.exports = router;
