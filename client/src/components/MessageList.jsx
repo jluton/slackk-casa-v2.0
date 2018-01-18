@@ -1,6 +1,7 @@
 import React from 'react';
 import { Container, ListGroup } from 'reactstrap';
 import MessageEntry from './MessageEntry.jsx';
+import PollEntry from './PollEntry.jsx';
 
 //container for message components
 export default ({ messages, currentWorkSpaceId }) => (
