@@ -84,20 +84,14 @@ const createWorkspace = (name, dbName = `ws_${name[0]}${Date.now()}`) =>
     .then(data => client.query(data.replace('$1', dbName).replace('$1_pk', `${dbName}_pk`)));
 
 // pull list of workspaces from database
-const getWorkspacesOld = () => client.query('SELECT * FROM workspaces').then(data => data.rows);
-const getWorkspaces = (user) => client.query('SELECT * FROM workspaces').then(data => data.rows);
-
+const getWorkspaces = () => client.query('SELECT * FROM workspaces').then(data => data.rows);
 
 // pull all emails from users table
 const getEmails = () => client.query('SELECT email FROM USERS')
   .then(data => data.rows);
 
 // create necessary tables if environment flag INITIALIZEDB is set to true
-if (process.env.INITIALIZEDB) {
-  initializeDB()
-    .then()
-    .catch(err => console.error('error creating database tables, ', err.stack));
-}
+
 
 const joinWorkspace = (user, workspace, action) => {
   if (action === 'add') {
@@ -118,7 +112,13 @@ const isInWorkspace = (user, workspace) => {
   return client.query(`select workspace_id from workspacemembers
     WHERE username = '${user}' AND workspace_id = ${workspace};`)
     .then(x => x.rows.length > 0)
-    .catch(console.log);
+    .catch(err => console.err(err.stack));
+}
+
+if (process.env.INITIALIZEDB) {
+  initializeDB()
+    .then()
+    .catch(err => console.error('error creating database tables, ', err.stack));
 }
 
 module.exports = {

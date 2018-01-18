@@ -103,4 +103,23 @@ describe('Database', () => {
       });
     }).timeout(1000);
   });
+
+  describe('joinWorkspace and isInWorkspace', () => {
+    it('join and leave workspaces', (done) => {
+      db.isInWorkspace('test', 0).then((data) => {
+        expect(data).to.equal(false);
+      })
+        .then(() => db.joinWorkspace('test', 0, 'add'))
+        .then(() => db.isInWorkspace('test', 0))
+        .then((data) => {
+          expect(data).to.equal(true);
+        })
+        .then(() => db.joinWorkspace('test', 0, 'drop'))
+        .then(() => db.isInWorkspace('test', 0))
+        .then((data) => {
+          expect(data).to.equal(false);
+          done();
+        });
+    }).timeout(3000);
+  });
 });
