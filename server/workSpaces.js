@@ -17,4 +17,18 @@ const generateWorkSpaceMemory = async function () {
   }
 };
 
-module.exports = { generateWorkSpaceMemory, activeWorkSpaces };
+setTimeout(() => {
+  console.log('creates active work spaces: ', activeWorkSpaces);
+}, 3000);
+
+const updateWorkSpace = function (ws, newWorkSpaceId) {
+  //updates work space, but username is null
+  const { currentWorkSpaceId, username } = ws.activeUserData;
+  if (currentWorkSpaceId !== null && activeWorkSpaces[currentWorkSpaceId][username]) {
+    delete activeWorkSpaces[currentWorkSpaceId][username];
+  }
+  activeWorkSpaces[newWorkSpaceId][username] = ws;
+  console.log('updated active workspaces', activeWorkSpaces);
+};
+
+module.exports = { generateWorkSpaceMemory, activeWorkSpaces, updateWorkSpace };

@@ -1,5 +1,6 @@
 const WebSocket = require('ws');
 
+const { updateWorkSpace } = require('./workSpaces');
 const db = require('../database');
 
 // creates a response object for sending to clients
@@ -91,14 +92,27 @@ const onMessage = async (ws, wss, data) => {
       {
         method: 'SENDWORKSPACE',
         data: {
-          currentWorkSpaceId,
-          currentWorkSpaceName,
+          username: 'Rick_Astley'
+          currentWorkSpaceId: 3,
+          currentWorkSpaceName: 'testSpace3',
       },
     */
-      console.log('message ', message);
-      console.log('data ', data);
-      ws.currentWorkspace = message.data.currentWorkspaceId;
-      return ws.send(response(201));
+      // It should update the work spaces object when a client changes workspace. test it out.
+      try {
+        const { username, currentWorkSpaceId, currentWorkSpaceName } = message.data;
+        // if client username has not be saved, save it to the websocket.
+        if (ws.activeUserData.username === null) ws.activeUserData.username = username;
+        // update the workspace memory object
+        updateWorkSpace(ws, currentWorkSpaceId);
+        // update the workspace on the websocket
+        ws.activeUserData.currentWorkSpaceName = currentWorkSpaceName;
+        ws.activeUserData.currentWorkSpaceId = currentWorkSpaceId;
+        // respond back to client with success response and updated client active user info.
+        return ws.send(response(201, 'Post success!', ws.activeUserData));
+      } catch (err) {
+        // respond back to client with error response and error message if workspace can't be updated.
+        return ws.send(response(400, err.stack, message.method));
+      }
 
     case 'SENDTYPINGSTATE':
     // SENDTYPINGSTATE informs the server that the client's currentlyTyping state has changed.
@@ -125,8 +139,12 @@ const onMessage = async (ws, wss, data) => {
 // event handler for when client connects to websocket server
 const onConnect = (ws, wss) => {
   // initializes current user information
-  ws.currentlyTyping = false;
-  ws.currentWorkspace = null;
+  ws.activeUserData = {
+    username: null,
+    currentlyTyping: false,
+    currentWorkSpaceName: null,
+    currentWorkSpaceId: null,
+  };
   // attaches event handler for when client sends message to server
   ws.on('message', data => onMessage(ws, wss, data));
 };
