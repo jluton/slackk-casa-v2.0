@@ -1,6 +1,6 @@
 import React from 'react';
 import axios, { post } from 'axios';
-import { connect, sendMessage, sendTypingState } from '../socketHelpers';
+import { connect, sendMessage, sendTypingState, sendCurrentWorkSpace } from '../socketHelpers';
 import { Input, Button, Popover, PopoverHeader, PopoverBody } from 'reactstrap';
 import NavBar from './NavBar.jsx';
 import MessageList from './MessageList.jsx';
@@ -134,11 +134,21 @@ export default class App extends React.Component {
 
   // Helper function to reassign current workspace
   changeCurrentWorkSpace(id, name) {
-    this.setState({ currentWorkSpaceId: id, currentWorkSpaceName: name });
-
+    // update current workspace state for dropdown menu
     axios.get(`/workspaces/${id}/members`)
-      .then(data => this.setState({ workspaceMembers: data.data }))
+      .then(data => this.setState({ workspaceMembers: data.data }));
+      
+    // inform server of workspace change
+    const workSpaceData = {
+      currentWorkSpaceId: id,
+      currentWorkSpaceName: name,
+      username: this.props.location.state.username,
+    };
+    sendCurrentWorkSpace(workSpaceData);
+
+    this.setState(workSpaceData);
   }
+
   // renders nav bar, body(which contains all message components other than input), and message input
   render() {
     const {

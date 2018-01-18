@@ -84,6 +84,21 @@ const onMessage = async (ws, wss, data) => {
         // respond back to client with error response and error message if message can't be posted to database
         return ws.send(response(400, err.stack, message.method));
       }
+    
+    case 'SENDWORKSPACE':
+    // SENDWORKSPACE informs the server that the client's current workspace has changed.
+    /*
+      {
+        method: 'SENDWORKSPACE',
+        data: {
+          currentWorkSpaceId,
+          currentWorkSpaceName,
+      },
+    */
+      console.log('message ', message);
+      console.log('data ', data);
+      ws.currentWorkspace = message.data.currentWorkspaceId;
+      return ws.send(response(201));
 
     case 'SENDTYPINGSTATE':
     // SENDTYPINGSTATE informs the server that the client's currentlyTyping state has changed.
@@ -97,11 +112,9 @@ const onMessage = async (ws, wss, data) => {
         },
       }
     */
-      try {
-
-      } catch (err) {
-
-      }
+      ws.currentlyTyping = message.data.currentlyTyping;
+      console.log(ws);
+      return ws.send(response(201));
 
     default:
       // unknown message sent to server, respond back to client
@@ -111,6 +124,9 @@ const onMessage = async (ws, wss, data) => {
 
 // event handler for when client connects to websocket server
 const onConnect = (ws, wss) => {
+  // initializes current user information
+  ws.currentlyTyping = false;
+  ws.currentWorkspace = null;
   // attaches event handler for when client sends message to server
   ws.on('message', data => onMessage(ws, wss, data));
 };

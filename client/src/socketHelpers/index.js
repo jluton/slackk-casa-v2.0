@@ -50,17 +50,30 @@ const sendMessage = (data) => {
   ws.send(JSON.stringify(msg));
 };
 
-
 const sendTypingState = (data) => {
   const { username, currentlyTyping, workspaceId } = data;
   const msg = {
-    method: 'POSTTYPINGSTATE',
+    method: 'SENDTYPINGSTATE',
     data: {
       username,
       currentlyTyping,
       workspaceId,
     },
   };
+  ws.send(JSON.stringify(msg));
+};
+
+const sendCurrentWorkSpace = (data) => {
+  const { currentWorkSpaceId, currentWorkSpaceName, username } = data;
+  const msg = {
+    method: 'SENDWORKSPACE',
+    data: {
+      username,
+      currentWorkSpaceId,
+      currentWorkSpaceName,
+    },
+  };
+  console.log(msg);
   ws.send(JSON.stringify(msg));
 };
 
@@ -145,4 +158,5 @@ export {
   getWorkSpaceMessagesFromServer,
   incomingMessageNotification,
   sendTypingState,
+  sendCurrentWorkSpace,
 };
