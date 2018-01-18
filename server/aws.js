@@ -6,7 +6,7 @@ var fs = require('fs');
 var bucketName = 'reslack';
 
 
-var path = '../client/dist/images/twitter-egg.png';
+// var path = '../client/dist/images/twitter-egg.png';
 
 // awsUploader
 /*
