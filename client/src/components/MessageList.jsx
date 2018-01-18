@@ -9,7 +9,7 @@ export default ({ messages, currentWorkSpaceId }) => (
     <Container>
       {messages.map(message => {
       	if (message.feature === 'poll') {
-      		<PollEntry questions={message} key={message.id} />
+      		<PollEntry message={message} key={message.id} />
       	} else {
       		<MessageEntry message={message} key={message.id} />	
       	}})	
