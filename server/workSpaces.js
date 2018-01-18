@@ -1,10 +1,20 @@
 const db = require('./../database/index.js');
 
-const generateWorkSpaceMemory = function() {
-  // fetch workspaces from database
-  const savedWorkSpaces = db.getWorkspaces();
-  const activeWorkSpaces = {};
-  console.log(savedWorkSpaces);
-  // for each workspace from db, create a property on workSpaces equal to the workSpaceId, 
-  // that points to an empty object.
+// create an object in which to store active users.
+const activeWorkSpaces = {};
+
+// Adds an object to activeWorkSpaces for each stored workspace, with id as key.
+// Individual workspace objects will track users actively using the workspace.
+const generateWorkSpaceMemory = async function () {
+  try {
+    // fetches all workspaces from database.
+    const workspaces = await db.getWorkspaces();
+    workspaces.forEach((workspace) => {
+      activeWorkSpaces[workspace.id] = {};
+    });
+  } catch (err) {
+    console.error(err);
+  }
 };
+
+module.exports = { generateWorkSpaceMemory, activeWorkSpaces };
