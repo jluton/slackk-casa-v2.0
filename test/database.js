@@ -41,18 +41,6 @@ describe('Database', () => {
     }).timeout(1000);
   });
   describe('createWorkspace', () => {
-    it('should create a messages table for the workspace', (done) => {
-      db.createWorkspace('testspace1', 'ws_testspace1').then(() =>
-        db.client.query(
-          "SELECT table_name FROM information_schema.tables WHERE table_schema='public' AND table_type='BASE TABLE'",
-          (err, data) => {
-            let tables = [];
-            data.rows.forEach(table => tables.push(table.table_name));
-            expect(tables).to.include.members(['ws_testspace1']);
-            done();
-          },
-        ));
-    }).timeout(1000);
     it('should add an entry into the workspaces table', (done) => {
       db
         .createWorkspace('testspace2', 'ws_testspace2')
@@ -108,7 +96,7 @@ describe('Database', () => {
     }).timeout(1000);
   });
   describe('getUser', () => {
-    it("should get a user's login info", (done) => {
+    it('should get a user\'s login info', (done) => {
       db.getUser('test').then((data) => {
         expect(data.password).to.equal('test');
         done();

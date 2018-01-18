@@ -1,5 +1,7 @@
 const CronJob = require('cron').CronJob;
 const nodemailer = require('nodemailer');
+require('dotenv').config();
+
 
 // settings used for nodemailer
 const transporter = nodemailer.createTransport({
@@ -19,7 +21,7 @@ const sendWelcomeEmail = async (username, email) => {
       from: `${process.env.EMAIL_USERNAME}`,
       to: email,
       subject: `Welcome to slackk-casa, ${username}!`,
-      text: 'Thanks for joining slackk-casa! We hope you have a great time using our service!',
+      text: 'Thanks for joining slackk-casa! We hope you have a great time using our service!\n\nSlackk Casa Es Tu Casa!',
     };
     return await transporter.sendMail(message);
   } catch (err) {

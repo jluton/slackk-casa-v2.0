@@ -19,6 +19,7 @@ export default class Login extends React.Component {
     if (username === '') {
       return this.setState({ loginStatus: 'Enter a username' });
     }
+    console.log(typeof password);
     fetch('/login', {
       method: 'POST',
       body: JSON.stringify({ username, password }),
@@ -79,6 +80,18 @@ export default class Login extends React.Component {
         textAlign: 'center',
       },
     };
+
+    Notification.requestPermission().then((result) => {
+      if (result === 'denied') {
+        console.log('Permission wasn\'t granted. Allow a retry.');
+        return;
+      }
+      if (result === 'default') {
+        console.log('The permission request was dismissed.');
+        return;
+      }
+      console.log('Permission was granted.');
+    });
 
     return (
       <div style={styles.body}>
