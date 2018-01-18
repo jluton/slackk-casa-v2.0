@@ -84,6 +84,25 @@ const onMessage = async (ws, wss, data) => {
         // respond back to client with error response and error message if message can't be posted to database
         return ws.send(response(400, err.stack, message.method));
       }
+
+    case 'SENDTYPINGSTATE':
+    // SENDTYPINGSTATE informs the server that the client's currentlyTyping state has changed.
+    /*
+      {
+        method: 'SENDTYPINGSTATE',
+        data: {
+          username,
+          currentlyTyping,
+          workspaceId,
+        },
+      }
+    */
+      try {
+
+      } catch (err) {
+
+      }
+
     default:
       // unknown message sent to server, respond back to client
       return ws.send(response(405, 'Unknown method', message.method));
