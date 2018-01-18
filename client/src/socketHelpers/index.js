@@ -62,7 +62,7 @@ const filterMsgByWorkSpace = (msg) => {
 };
 
 // Takes in NEWMESSAGE data and then creates a notification.
-const incomingMessageNotificaiton = (data) => {
+const incomingMessageNotification = (data) => {
   const { Notification } = window;
   // Checks if browser has permission to display notifications
   if (!('Notification' in window)) {
@@ -73,34 +73,39 @@ const incomingMessageNotificaiton = (data) => {
   } else if (Notification.permission === 'granted') {
     const { username, text } = data.message;
     const workspaceName = app.state.workSpaces.filter(workspace => workspace.id === data.workspaceId)[0].name;
-    const notification = new Notification(`New message from ${username} in #${workspaceName}: ${text}`);
+    return new Notification(`New message from ${username} in #${workspaceName}: ${text}`);
   }
 };
 
 // ws refers to websocket object
 const afterConnect = () => {
   ws.onmessage = (event) => {
-    let serverResp = JSON.parse(event.data);
+    const {
+      method,
+      message,
+      code,
+      data,
+    } = JSON.parse(event.data);
 
     // TODO: better error handling. Temp till complete switch statements
-    if (serverResp.code === 400) {
-      console.log(serverResp.method);
-      throw serverResp.message;
+    if (code === 400) {
+      console.log(method);
+      throw message;
     }
 
-    switch (serverResp.method) {
+    switch (method) {
       case 'GETMESSAGES':
-        loadMessages(serverResp.data);
+        loadMessages(data);
         break;
       case 'NEWMESSAGE':
-        incomingMessageNotificaiton(serverResp.data);
-        filterMsgByWorkSpace(serverResp.data);
+        incomingMessageNotification(data);
+        filterMsgByWorkSpace(data);
         break;
       case 'GETUSERS':
-        setUsers(serverResp.data);
+        setUsers(data);
         break;
       case 'POSTMESSAGE':
-        addNewMessage(serverResp.data);
+        addNewMessage(data);
         break;
       default:
     }
@@ -128,4 +133,4 @@ const connect = (server, component) => {
   });
 };
 
-export { connect, sendMessage, afterConnect, getWorkSpaceMessagesFromServer };
+module.exports = { connect, sendMessage, afterConnect, getWorkSpaceMessagesFromServer, incomingMessageNotification };
