@@ -7,10 +7,14 @@ var bucketName = 'reslack';
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 // var path = '../client/dist/images/twitter-egg.png';
 =======
 var path = '../client/dist/images/twitter-egg.png';
 >>>>>>> Merge branch 'master' of https://github.com/arasdean/slackk-casa-v2.0
+=======
+// var path = '../client/dist/images/twitter-egg.png';
+>>>>>>> Adjusting the routes back to normal
 
 // awsUploader
 /*
