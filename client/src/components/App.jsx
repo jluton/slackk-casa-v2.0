@@ -1,6 +1,6 @@
 import React from 'react';
 import axios, { post } from 'axios';
-import { connect, sendMessage } from '../socketHelpers';
+import { connect, sendMessage, sendTypingState } from '../socketHelpers';
 import { Input, Button, Popover, PopoverHeader, PopoverBody } from 'reactstrap';
 import NavBar from './NavBar.jsx';
 import MessageList from './MessageList.jsx';
@@ -32,8 +32,6 @@ export default class App extends React.Component {
     };
 
     this.timer = null;
-
-    // this.handleChange = this.handleChange.bind(this);
   }
 
   componentDidMount() {
@@ -63,26 +61,44 @@ export default class App extends React.Component {
   fileUpload(file) {
    const url = '/upload';
    const formData = new FormData();
-   formData.append('file',file)
+   formData.append('file', file);
    const config = {
-       headers: {
-        'content-type': 'multipart/form-data'
-       }
+    headers: {
+      'content-type': 'multipart/form-data'
+    }
    }
    return post(url, formData, config)
  }
-  // changes the query state based on user input in text field
+ 
+  turnOffTyping() {
+    sendTypingState({
+      username: this.props.location.state.username,
+      currentlyTyping: false,
+      workspaceId: this.state.currentWorkSpaceId,
+    });
+    this.setState({ currentlyTyping: false });
+  }
+
+  // Handle changes to current query value and currentlyTyping 
   handleChange(event) {
     // clear any timers set reset currentlyTyping
     clearTimeout(this.timer);
+    // if not already typing, send change to server
+    if (!this.state.currentlyTyping) {
+      sendTypingState({
+        username: this.props.location.state.username,
+        currentlyTyping: true,
+        workspaceId: this.state.currentWorkSpaceId,
+      });
+    }
     // changes the query state based on user input in text field
-    // sets user as currently typing.
+    // sets user as currently typing
     this.setState({
       query: event.target.value,
       currentlyTyping: true,
     });
-    // set a timer to reset currentlyTyping state.
-    this.timer = setTimeout(this.turnOffTyping.bind(this), 3000);
+    // set a timer to reset currentlyTyping back to false.
+    this.timer = setTimeout(this.turnOffTyping.bind(this), 8000);
   }
 
   // sends message on enter key pressed and clears form
