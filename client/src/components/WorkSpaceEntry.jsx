@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Button } from 'reactstrap';
 import { getWorkSpaceMessagesFromServer } from '../socketHelpers/index.js';
 import PropTypes from 'prop-types';
-const axios = require('axios');
 
 export default class WorkSpaceEntry extends Component {
   constructor(props) {
@@ -17,20 +16,6 @@ export default class WorkSpaceEntry extends Component {
     changeCurrentWorkSpace(workSpace.id, workSpace.name);
   }
 
-  handleJoinClick(event) {
-    let { handleFail, workSpace, currentUser } = this.props;
-    handleFail();
-    this.setState({ joined: !this.state.joined });
-    const body = {
-      ws: workSpace.id,
-      user: currentUser,
-      action: this.state.joined ? 'drop' : 'add',
-    };
-    console.log(body)
-    axios.post('/workspaces/membership', body)
-      .then(console.log)
-      .catch(console.log);
-  }
 
   render() {
     let { workSpace, currentWorkSpaceId } = this.props;
@@ -50,9 +35,6 @@ export default class WorkSpaceEntry extends Component {
             # {workSpace.name}
           </h5>
         )}
-        <button onClick={event => this.handleJoinClick(event)}>
-          {this.state.joined ? 'Leave' : 'Join'}
-        </button>
       </div>
     );
   }
