@@ -68,6 +68,10 @@
   padding: 5px 0 5px 0;
 }
 
+.workSpace-name:hover {
+  cursor: pointer;
+}
+
 .workSpace-hover:hover {
   background-color: #3e323c;
 }
