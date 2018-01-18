@@ -1,15 +1,18 @@
 import React from 'react';
+import axios, { post } from 'axios';
 import { connect, sendMessage } from '../socketHelpers';
-import { Input } from 'reactstrap';
+import { Input, Button, Popover, PopoverHeader, PopoverBody } from 'reactstrap';
 import NavBar from './NavBar.jsx';
 import MessageList from './MessageList.jsx';
 import Body from './Body.jsx';
+import SendFiles from './SendFiles.jsx';
 
 //The main component of the App. Renders the core functionality of the project.
 export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      file: null,
       //Default message informs the user to select a workspace
       messages: [
         {
@@ -35,6 +38,36 @@ export default class App extends React.Component {
     connect(server, this);
   }
 
+  handleFileChange(e) {
+    this.setState({file: e.target.files[0]});
+  }
+
+  handleFileSubmit(event) {
+    event.preventDefault();
+    let { file } = this.state;
+    this.fileUpload(file)
+      .then((response) => {
+        console.log('success!');
+        sendMessage({
+          username: this.props.location.state.username,
+          text: response.data,
+          workspaceId: this.state.currentWorkSpaceId,
+          isImage: true
+        });
+      })
+  }
+  // fileUpload function thanks to Ashik Nesin: https://github.com/AshikNesin/axios-fileupload
+  fileUpload(file) {
+   const url = '/upload';
+   const formData = new FormData();
+   formData.append('file',file)
+   const config = {
+       headers: {
+           'content-type': 'multipart/form-data'
+       }
+   }
+   return post(url, formData, config)
+ }
   // changes the query state based on user input in text field
   handleChange(event) {
     this.setState({
@@ -52,6 +85,7 @@ export default class App extends React.Component {
         username: this.props.location.state.username,
         text: this.state.query,
         workspaceId: this.state.currentWorkSpaceId,
+        isImage: false,
       });
       // resets text box to blank string
       this.setState({
@@ -93,6 +127,8 @@ export default class App extends React.Component {
           currentUser={this.props.location.state.username}
         />
         <div className="input-container">
+          <SendFiles fileSubmit={this.handleFileSubmit.bind(this)} change={this.handleFileChange.bind(this)}/>
+
           <Input
             value={query}
             className="message-input-box"

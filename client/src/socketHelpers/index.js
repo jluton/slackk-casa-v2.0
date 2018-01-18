@@ -36,6 +36,7 @@ const sendMessage = (data) => {
       username: data.username,
       text: data.text,
       workspaceId: data.workspaceId,
+      isImage: data.isImage
     },
   };
   oneup.play();

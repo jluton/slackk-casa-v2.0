@@ -3,17 +3,23 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const path = require('path');
-
+const multer = require('multer');
 const db = require('../database');
 const auth = require('./auth');
 const passport = require('./passport');
 const email = require('./email');
-
+const aws = require('../server/aws.js');
 /*
   Express routes
 */
 
 const router = express.Router();
+
+var storage = multer.memoryStorage()
+var upload = multer({
+  storage: storage,
+  limits:{fileSize: 2000000},
+}).single('file')
 
 router.use(cookieParser());
 router.use(session({ secret: 'slackk-casa', resave: false, saveUninitialized: false }));

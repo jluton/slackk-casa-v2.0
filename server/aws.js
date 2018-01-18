@@ -6,7 +6,11 @@ var fs = require('fs');
 var bucketName = 'reslack';
 
 
+<<<<<<< HEAD
 // var path = '../client/dist/images/twitter-egg.png';
+=======
+var path = '../client/dist/images/twitter-egg.png';
+>>>>>>> Merge branch 'master' of https://github.com/arasdean/slackk-casa-v2.0
 
 // awsUploader
 /*
