@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 export default class WorkSpaceEntry extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { joined: false };
   }
 
   handleClick(event) {
@@ -15,6 +15,7 @@ export default class WorkSpaceEntry extends Component {
     getWorkSpaceMessagesFromServer(workSpace.id);
     changeCurrentWorkSpace(workSpace.id, workSpace.name);
   }
+
 
   render() {
     let { workSpace, currentWorkSpaceId } = this.props;

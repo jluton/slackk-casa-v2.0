@@ -18,6 +18,7 @@ export default class Body extends React.Component {
       loadWorkSpaces,
       changeCurrentWorkSpace,
       currentWorkSpaceId,
+      currentUser
     } = this.props;
     return (
       <Container fluid>
@@ -28,6 +29,7 @@ export default class Body extends React.Component {
               loadWorkSpaces={loadWorkSpaces}
               changeCurrentWorkSpace={changeCurrentWorkSpace}
               currentWorkSpaceId={currentWorkSpaceId}
+              currentUser={currentUser}
             />
           </Col>
           <Col className="message-list-col" xs="10">

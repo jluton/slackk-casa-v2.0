@@ -91,6 +91,30 @@ const getEmails = () => client.query('SELECT email FROM USERS')
   .then(data => data.rows);
 
 // create necessary tables if environment flag INITIALIZEDB is set to true
+
+
+const joinWorkspace = (user, workspace, action) => {
+  if (action === 'add') {
+    client.query(`INSERT INTO workspacemembers (username, workspace_id) VALUES ('${user}', ${workspace});`)
+      .then()
+      .catch(err => console.error('error adding user to workspaceMembers, ', err.stack));
+  } else if (action === 'drop') {
+    client.query(`DELETE FROM workspacemembers
+      WHERE username = '${user}' AND workspace_id = ${workspace};`)
+      .then()
+      .catch(err => console.error('error removing user from workspaceMembers, ', err.stack));
+  } else {
+    throw new Error('Invalid action');
+  }
+};
+
+const isInWorkspace = (user, workspace) => {
+  return client.query(`select workspace_id from workspacemembers
+    WHERE username = '${user}' AND workspace_id = ${workspace};`)
+    .then(x => x.rows.length > 0)
+    .catch(err => console.err(err.stack));
+}
+
 if (process.env.INITIALIZEDB) {
   initializeDB()
     .then()
@@ -108,4 +132,6 @@ module.exports = {
   getWorkspaces,
   getEmails,
   getPasswordHint,
+  joinWorkspace,
+  isInWorkspace,
 };

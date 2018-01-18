@@ -146,4 +146,26 @@ router.post('/workspaces', async (req, res) => {
   }
 });
 
+
+router.post('/workspaces/membership', bodyParser.json(), async (req, res) => {
+  try {
+    const { ws, user, action } = await req.body;
+    await db.joinWorkspace(user, ws, action);
+    return res.sendStatus(201);
+  } catch (err) {
+    return res.status(404).json(err.stack);
+  }
+});
+
+router.post('/workspaces/check', bodyParser.json(), async (req, res) => {
+  try {
+    const { ws, user } = await req.body;
+    const bool = await db.isInWorkspace(user, ws);
+    return res.status(200).send(bool);
+  } catch (err) {
+    return res.status(404).json(err.stack);
+  }
+});
+
+
 module.exports = router;
