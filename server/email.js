@@ -1,5 +1,7 @@
 const CronJob = require('cron').CronJob;
 const nodemailer = require('nodemailer');
+require('dotenv').config();
+
 
 // settings used for nodemailer
 const transporter = nodemailer.createTransport({

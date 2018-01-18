@@ -52,7 +52,7 @@ router.post('/signup', async (req, res) => {
       return res.status(400).json('username exists');
     }
     await auth.addUser(req.body.username, req.body.password, req.body.email, req.body.passwordHint);
-    // email.sendWelcomeEmail(req.body.username, req.body.email).then().catch();
+    email.sendWelcomeEmail(req.body.username, req.body.email).then().catch();
     return res.sendStatus(200);
   } catch (err) {
     return res.status(401).json(err.stack);
