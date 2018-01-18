@@ -7,13 +7,12 @@ import MessageList from './MessageList.jsx';
 import Body from './Body.jsx';
 import SendFiles from './SendFiles.jsx';
 
-//The main component of the App. Renders the core functionality of the project.
+// The main component of the App. Renders the core functionality of the project.
 export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      file: null,
-      //Default message informs the user to select a workspace
+      // Default message informs the user to select a workspace
       messages: [
         {
           text: 'Welcome to slackk-casa! Please select or create a workspace!',
@@ -25,21 +24,26 @@ export default class App extends React.Component {
       ],
       users: [],
       workSpaces: [],
+      file: null,
       query: '',
       currentWorkSpaceId: 0,
       currentWorkSpaceName: '',
+      currentlyTyping: false,
     };
+
+    this.timer = null;
+
+    // this.handleChange = this.handleChange.bind(this);
   }
 
   componentDidMount() {
-    let server = location.origin.replace(/^http/, 'ws');
-
+    const server = location.origin.replace(/^http/, 'ws');
     // connect to the websocket server
     connect(server, this);
   }
 
   handleFileChange(e) {
-    this.setState({file: e.target.files[0]});
+    this.setState({ file: e.target.files[0] });
   }
 
   handleFileSubmit(event) {
@@ -53,7 +57,7 @@ export default class App extends React.Component {
           text: response.data,
           workspaceId: this.state.currentWorkSpaceId,
         });
-      })
+      });
   }
   // fileUpload function thanks to Ashik Nesin: https://github.com/AshikNesin/axios-fileupload
   fileUpload(file) {
@@ -62,16 +66,23 @@ export default class App extends React.Component {
    formData.append('file',file)
    const config = {
        headers: {
-           'content-type': 'multipart/form-data'
+        'content-type': 'multipart/form-data'
        }
    }
    return post(url, formData, config)
  }
   // changes the query state based on user input in text field
   handleChange(event) {
+    // clear any timers set reset currentlyTyping
+    clearTimeout(this.timer);
+    // changes the query state based on user input in text field
+    // sets user as currently typing.
     this.setState({
       query: event.target.value,
+      currentlyTyping: true,
     });
+    // set a timer to reset currentlyTyping state.
+    this.timer = setTimeout(this.turnOffTyping.bind(this), 3000);
   }
 
   // sends message on enter key pressed and clears form
