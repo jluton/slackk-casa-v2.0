@@ -114,6 +114,13 @@ const joinWorkspace = (user, workspace, action) => {
   }
 };
 
+const isInWorkspace = (user, workspace) => {
+  return client.query(`select workspace_id from workspacemembers
+    WHERE username = '${user}' AND workspace_id = ${workspace};`)
+    .then(x => x.rows.length > 0)
+    .catch(console.log);
+}
+
 module.exports = {
   client,
   initializeDB,
@@ -126,4 +133,5 @@ module.exports = {
   getEmails,
   getPasswordHint,
   joinWorkspace,
+  isInWorkspace,
 };
