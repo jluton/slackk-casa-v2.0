@@ -28,15 +28,15 @@ const initializeDB = () => {
 };
 
 // post message to database
-const postMessage = (message, username, workspaceId) =>
+const postMessage = (message, username, workspaceId, special_type) =>
   // pull workspace messages table name using workspaceId
   client
     .query('SELECT db_name FROM workspaces WHERE id = $1', [workspaceId])
     // post new message into workspace's messages table
     .then(data =>
       client.query(
-        'INSERT INTO messages (text, username, workspace_id) VALUES ($1, $2, $3) RETURNING *',
-        [message, username, data.rows[0].db_name],
+        'INSERT INTO messages (text, username, workspace_id, special_type) VALUES ($1, $2, $3, $4) RETURNING *',
+        [message, username, data.rows[0].db_name, special_type],
       ));
 
 // get messages for workspace from database

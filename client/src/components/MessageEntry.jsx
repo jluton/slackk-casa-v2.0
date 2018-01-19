@@ -1,5 +1,6 @@
 import React from 'react';
 import { Container, Media } from 'reactstrap';
+import PollOption from './PollOption.jsx';
 
 //Individual message container
 export default class extends React.Component {
@@ -13,7 +14,32 @@ export default class extends React.Component {
     this.setState({ toggleHover: !this.state.toggleHover });
   }
   render() {
+
     const { message } = this.props;
+
+    let avatarImg = "/images/twitter-egg.png";
+    let text = message.text
+    let options = [];
+    let optionComponent = null;
+
+    if (message.special_type === 'poll') {
+      message.username = 'Simple Poll';
+      avatarImg = "/images/poll.png";
+
+      let poll = text.slice(5);
+      message.username = 'Simple Poll';
+      avatarImg = "/images/poll.png";
+
+      poll = poll.match(/".*?"|\w+/g);
+      text = poll[0].replace(/['"]+/g, '');
+      options = poll.splice(1).map(option => option.replace(/['"]+/g, ''));
+
+      if (options.length > 0) {
+        optionComponent = options.map((option, index) => 
+              <PollOption option={option} index={index} key={`${message.id}${index}`} />)      
+      }
+    } 
+
     //for the color changing avatars
     let color = () => {
       let colors = [
@@ -75,7 +101,7 @@ export default class extends React.Component {
             <img
               className="egg img-responsive"
               href="#"
-              src="/images/twitter-egg.png"
+              src={avatarImg}
               alt="profile-pic"
               style={styles.egg}
             />
@@ -90,10 +116,14 @@ export default class extends React.Component {
               <a href={message.text}>
               <img id="messageEntry" src={message.text}/>
               </a> 
-            </div>) : (<div> {message.text} </div> )}
-
+            </div>) : (<div style={styles.message}>{text}</div>)}
+          <div style={styles.message}>{text}</div>
+          <div>
+            {optionComponent}
+          </div>
         </Container>
       </div>
     );
   }
 }
+
