@@ -36,12 +36,25 @@ export default class Body extends React.Component {
             />
           </Col>
           <Col className="message-list-col" xs="10">
+            <div
+
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              height: '100%',
+             }}
+            >
             <WorkspaceMenu
               currentWorkSpaceId={currentWorkSpaceId}
               currentUser={currentUser}
               workspaceMembers={workspaceMembers}
             />
-            <MessageList messages={messages} currentWorkSpaceId={currentWorkSpaceId} />
+            <MessageList
+              messages={messages}
+              currentWorkSpaceId={currentWorkSpaceId}
+            />
+            </div>
           </Col>
         </Row>
       </Container>
