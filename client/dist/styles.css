@@ -79,10 +79,13 @@
   color: #ffffff;
 }
 
+<<<<<<< HEAD
 img#messageEntry {
   height:200px;
 }
 
+=======
+>>>>>>> 325b10c5a5f39c5f3b3dde8485b70996ffef0d12
 .option {
   padding-left: 70px;
 }
@@ -97,5 +100,4 @@ span + span {
 
 .votes {
   font-size: .85em;
->>>>>>> basic poll implementation
 }

@@ -27,6 +27,9 @@ export default class extends React.Component {
       avatarImg = "/images/poll.png";
 
       let poll = text.slice(5);
+      message.username = 'Simple Poll';
+      avatarImg = "/images/poll.png";
+
       poll = poll.match(/".*?"|\w+/g);
       text = poll[0].replace(/['"]+/g, '');
       options = poll.splice(1).map(option => option.replace(/['"]+/g, ''));
@@ -36,8 +39,6 @@ export default class extends React.Component {
               <PollOption option={option} index={index} key={`${message.id}${index}`} />)      
       }
     } 
-
-    console.log(message.text.slice(0, 10))
 
     //for the color changing avatars
     let color = () => {
@@ -116,6 +117,7 @@ export default class extends React.Component {
               <img id="messageEntry" src={message.text}/>
               </a> 
             </div>) : (<div style={styles.message}>{text}</div>)}
+          <div style={styles.message}>{text}</div>
           <div>
             {optionComponent}
           </div>
@@ -125,5 +127,3 @@ export default class extends React.Component {
   }
 }
 
-
-// <MessageEntry message={message} key={message.id} />
