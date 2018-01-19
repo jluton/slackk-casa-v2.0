@@ -32,13 +32,14 @@ const setUsers = (users) => {
   app.setState({ users });
 };
 
+// updates App currentlyTyping state depending on whether user is typing.
 const setTypingUser = (user) => {
   app.setState({
     typingUser: user.currentlyTyping ? user.username : null,
   });
 };
 
-// takes in a parameter and sends that parameter to the socket server
+// takes in a message parameter and sends that parameter to the socket server
 const sendMessage = (data) => {
   const {
     username, text, workspaceId, isImage,
@@ -58,8 +59,8 @@ const sendMessage = (data) => {
   ws.send(JSON.stringify(msg));
 };
 
+// takes a parameter with user information incuding whether user is typing, and sends that paramter to socket server.
 const sendTypingState = (data) => {
-  console.log('sendTypingState runs on client');
   const { username, currentlyTyping, workspaceId } = data;
   const msg = {
     method: 'SENDTYPINGSTATE',
@@ -72,6 +73,7 @@ const sendTypingState = (data) => {
   ws.send(JSON.stringify(msg));
 };
 
+// takes a parameter with users' current work space, and sends that paramter to socket server.
 const sendCurrentWorkSpace = (data) => {
   const { currentWorkSpaceId, currentWorkSpaceName, username } = data;
   const msg = {
@@ -91,7 +93,8 @@ const getWorkSpaceMessagesFromServer = (id) => {
   ws.send(JSON.stringify(msg));
 };
 
-// takes in all new messages and filters and concats messages that match the current workSpace
+// takes in new messages and filters and concats messages that match the current workSpace
+// resets typing user state
 const filterMsgByWorkSpace = (msg) => {
   if (sent) {
     sent = false;
@@ -99,7 +102,10 @@ const filterMsgByWorkSpace = (msg) => {
     beep.play();
   }
   if (msg.workspaceId === app.state.currentWorkSpaceId) {
-    app.setState({ messages: [...app.state.messages, msg.message] });
+    app.setState({ 
+      messages: [...app.state.messages, msg.message],
+      typingUser: null,
+    });
   }
 };
 
@@ -124,7 +130,6 @@ const afterConnect = () => {
         loadMessages(data);
         break;
       case 'NEWMESSAGE':
-        // If message is from currently typing user, reset app typingUser state.
         incomingMessageNotification(data);
         filterMsgByWorkSpace(data);
         break;
@@ -145,9 +150,7 @@ const afterConnect = () => {
         }
         break;
       case 'USERCHANGEDTYPINGSTATE':
-        console.log('USERCHANGEDTYPINGSTATE response data ', JSON.parse(event.data));
         setTypingUser(data);
-        // Change app state
         break;
       default:
     }

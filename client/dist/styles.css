@@ -29,6 +29,11 @@
   overflow: scroll;
 }
 
+.typing-notification {
+  min-height: 24px;
+  float: left;
+}
+
 /* send message div container */
 .input-container {
   height: 25vh;

@@ -22,7 +22,11 @@ export default class Body extends React.Component {
       currentUser,
       workspaceMembers,
       updateWorkSpaces,
+      typingUser,
     } = this.props;
+
+    const userTypingNotification = typingUser !== null ? `${typingUser} is typing...` : ' ';
+
     return (
       <Container fluid>
         <Row>
@@ -37,23 +41,25 @@ export default class Body extends React.Component {
           </Col>
           <Col className="message-list-col" xs="10">
             <div
-
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              height: '100%',
-             }}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                height: '100%',
+              }}
             >
-            <WorkspaceMenu
-              currentWorkSpaceId={currentWorkSpaceId}
-              currentUser={currentUser}
-              workspaceMembers={workspaceMembers}
-            />
-            <MessageList
-              messages={messages}
-              currentWorkSpaceId={currentWorkSpaceId}
-            />
+              <WorkspaceMenu
+                currentWorkSpaceId={currentWorkSpaceId}
+                currentUser={currentUser}
+                workspaceMembers={workspaceMembers}
+              />
+              <div className="typing-notification">
+                {userTypingNotification}
+              </div>
+              <MessageList
+                messages={messages}
+                currentWorkSpaceId={currentWorkSpaceId}
+              />
             </div>
           </Col>
         </Row>

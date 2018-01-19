@@ -150,6 +150,7 @@ export default class App extends React.Component {
       currentWorkSpaceId: id,
       currentWorkSpaceName: name,
       username: this.props.location.state.username,
+      typingUser: null,
     };
     sendCurrentWorkSpace(workSpaceData);
 
@@ -159,15 +160,18 @@ export default class App extends React.Component {
   // renders nav bar, body(which contains all message components other than input), and message input
   render() {
     const {
-      messages, query, workSpaces,
-      currentWorkSpaceId, currentWorkSpaceName, workspaceMembers
+      messages, query, workSpaces, currentWorkSpaceId, 
+      currentWorkSpaceName, workspaceMembers, typingUser
     } = this.state;
+
+    const { username } = this.props.location.state;
+
     return (
       <div className="app-container">
         <NavBar
           currentWorkSpaceName={currentWorkSpaceName}
           currentWorkSpaceId={currentWorkSpaceId}
-          currentUser={this.props.location.state.username}
+          currentUser={username}
           workspaceMembers={workspaceMembers}
         />
         <Body
@@ -176,7 +180,8 @@ export default class App extends React.Component {
           updateWorkSpaces={this.updateWorkSpaces}
           changeCurrentWorkSpace={(id, name) => this.changeCurrentWorkSpace(id, name)}
           currentWorkSpaceId={currentWorkSpaceId}
-          currentUser={this.props.location.state.username}
+          currentUser={username}
+          typingUser={typingUser}
           workspaceMembers={workspaceMembers}
         />
         <div className="input-container">

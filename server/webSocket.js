@@ -63,7 +63,8 @@ const onMessage = async (ws, wss, data) => {
       } catch (err) {
         // respond back to client with error response and error message if messages can't be pulled from database
         return ws.send(response(400, err.stack, message.method));
-      }      
+      }
+
     case 'POSTMESSAGE':
     // method POSTMESSAGE posts a message to the workspace for the given workspaceId
       try {
@@ -83,6 +84,7 @@ const onMessage = async (ws, wss, data) => {
         [postedMessage] = postedMessage.rows;
         // respond back to client with success response and list of messages if successfully posted to the database
         ws.send(response(201, 'Post success', message.method, postedMessage));
+        ws.activeUserData.currentlyTyping = false;
         // notify all other connected clients that a new message has been posted with a NEWMESSAGE response
         return updateEveryoneElse(
           ws,
@@ -148,7 +150,6 @@ const onMessage = async (ws, wss, data) => {
       }
     */
       try {
-        console.log('typing state received, ', message);
         ws.activeUserData.currentlyTyping = message.data.currentlyTyping;
         // Inform user that currentlyTyping post was successful.
         ws.send(response(201, 'Post success', message.method, ws.activeUserData));
