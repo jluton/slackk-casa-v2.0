@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import AddUser from './AddUser.jsx';
 
 import {
   Collapse,
@@ -17,7 +16,6 @@ import {
   DropdownItem,
 } from 'reactstrap';
 
-const axios = require('axios');
 
 
 export default class NavBar extends React.Component {
@@ -37,37 +35,6 @@ export default class NavBar extends React.Component {
     });
   }
 
-  componentDidMount() {
-    let { currentUser } = this.props;
-    let body = {
-      ws: this.props.currentWorkSpaceId,
-      user: currentUser,
-    };
-    axios.post('/workspaces/check', body)
-      .then(x => this.setState({ joined: x.data }));
-  }
-  componentDidUpdate() {
-    let { currentUser } = this.props;
-    let body = {
-      ws: this.props.currentWorkSpaceId,
-      user: currentUser,
-    };
-    axios.post('/workspaces/check', body)
-      .then(x => this.setState({ joined: x.data }));
-  }
-
-  handleJoinClick(event) {
-    let { currentUser, currentWorkSpaceId } = this.props;
-    // this.setState({ joined: !this.state.joined });
-    let body = {
-      ws: currentWorkSpaceId,
-      user: currentUser,
-      action: this.state.joined ? 'drop' : 'add',
-    };
-    axios.post('/workspaces/membership', body)
-      .then(console.log)
-      .catch(console.log);
-  }
 
   render() {
     return (
@@ -78,10 +45,6 @@ export default class NavBar extends React.Component {
         <h3 className="text-center">
           #{this.props.currentWorkSpaceName || 'select a workspace!'}{'  '}
         </h3>
-        <button onClick={event => this.handleJoinClick(event)}>
-          {this.state.joined ? 'Leave' : 'Join'}
-        </button>
-        <AddUser currentWorkSpaceId={this.props.currentWorkSpaceId} />
         <NavbarToggler onClick={this.toggle} />
         <Collapse isOpen={this.state.isOpen} navbar>
           <Nav className="ml-auto" navbar>
@@ -92,6 +55,8 @@ export default class NavBar extends React.Component {
               <DropdownMenu>
                 <NavLink href="/login">
                   <DropdownItem>Sign Out</DropdownItem>
+
+
                 </NavLink>
               </DropdownMenu>
             </UncontrolledDropdown>

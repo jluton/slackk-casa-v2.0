@@ -30,6 +30,7 @@ export default class AddUser extends React.Component {
     axios.post('/workspaces/membership', body)
       .then(console.log)
       .catch(console.log);
+    this.setState({ value: '' });
   }
 
   render() {
