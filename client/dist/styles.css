@@ -23,8 +23,6 @@
 .message-list-col {
   height: 75vh;
   overflow: scroll;
-  display: flex;
-  flex-direction: column-reverse;
 }
 
 /* send message div container */
@@ -79,4 +77,20 @@
 .highlight-workSpace {
   background-color: #4c9689;
   color: #ffffff;
+}
+
+.option {
+  padding-left: 70px;
+}
+
+.optionButton {
+  width: 25px;
+}
+
+span + span {
+  padding-left: 10px;
+}
+
+.votes {
+  font-size: .85em;
 }

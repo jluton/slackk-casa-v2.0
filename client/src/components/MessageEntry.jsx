@@ -1,5 +1,6 @@
 import React from 'react';
 import { Container, Media } from 'reactstrap';
+import PollOption from './PollOption.jsx';
 
 //Individual message container
 export default class extends React.Component {
@@ -13,7 +14,37 @@ export default class extends React.Component {
     this.setState({ toggleHover: !this.state.toggleHover });
   }
   render() {
+
     const { message } = this.props;
+
+    let avatarImg = "/images/twitter-egg.png";
+    let text = message.text
+    let options = [];
+    let optionComponent = null;
+
+    if (message.special_type === 'poll') {
+      console.log(message)
+      console.log(message.username)
+      message.username = 'Simple Poll';
+      avatarImg = "/images/poll.png";
+
+      let poll = message.text.slice(5);
+      poll = poll.match(/".*?"|\w+/g);
+      text = poll[0].replace(/['"]+/g, '');
+      options = poll.splice(1).map(option => option.replace(/['"]+/g, ''));
+
+      if (options.length > 0) {
+        optionComponent = options.map((option, index) => 
+              <PollOption option={option} index={index} key={`${message.id}${index}`} />)      
+      }
+      console.log('text', text)
+      console.log('options', options)
+
+      // options = <PollEntry message={message} key={message.id} />;
+    } else {
+      // messageBox = <MessageEntry message={message} key={message.id} />;
+    } 
+
     //for the color changing avatars
     let color = () => {
       let colors = [
@@ -72,7 +103,7 @@ export default class extends React.Component {
             <img
               className="egg img-responsive"
               href="#"
-              src="/images/twitter-egg.png"
+              src={avatarImg}
               alt="profile-pic"
               style={styles.egg}
             />
@@ -81,9 +112,15 @@ export default class extends React.Component {
             {message.username}
             <span style={styles.timeStamp}>{new Date(message.createdAt).toLocaleTimeString()}</span>
           </span>
-          <div style={styles.message}>{message.text}</div>
+          <div style={styles.message}>{text}</div>
+          <div>
+            {optionComponent}
+          </div>
         </Container>
       </div>
     );
   }
 }
+
+
+// <MessageEntry message={message} key={message.id} />
