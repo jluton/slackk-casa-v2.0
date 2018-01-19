@@ -4,13 +4,13 @@ import WorkSpaceEntry from './WorkSpaceEntry.jsx';
 import CreateWorkSpace from './CreateWorkSpace.jsx';
 import PropTypes from 'prop-types';
 
-//Container for all workspaces
+// Container for all workspaces
 export default class WorkSpaceList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       workSpaceQuery: '',
-      //createFail usually happens if a workspace already exists
+      // createFail usually happens if a workspace already exists
       createFail: false,
     };
     this.handleFail = this.handleFail.bind(this);
@@ -18,14 +18,15 @@ export default class WorkSpaceList extends Component {
     this.createWorkSpace = this.createWorkSpace.bind(this);
   }
 
-  //grabs the value from the input field
+  // grabs the value from the input field
   getWorkSpaceQuery(query) {
     this.setState({ workSpaceQuery: query });
   }
 
-  //posts the query to the server that results in a success or failed creation
+  // posts the query to the server that results in a success or failed creation
   createWorkSpace() {
-    let { loadWorkSpaces } = this.props;
+    const { updateWorkSpaces } = this.props;
+    console.log('updateWorkSpaces: ', updateWorkSpaces);
     let { workSpaceQuery, createFail } = this.state;
     this.setState({ createFail: false });
     if (workSpaceQuery.length > 0) {
@@ -34,15 +35,17 @@ export default class WorkSpaceList extends Component {
         body: JSON.stringify({ name: workSpaceQuery }),
         headers: { 'content-type': 'application/json' },
       })
-        .then(resp => (resp.status === 201 ? loadWorkSpaces() : this.setState({ createFail: true })))
+        // If post was successful, parse response and re-render workspace list
+        .then(resp => (resp.status === 201 ? resp.json() : this.setState({ createFail: true })))
+        .then((data) => { updateWorkSpaces(data); })
         .catch(console.error);
     }
   }
-  //helper for createWorkSpace
+  // helper for createWorkSpace
   handleFail() {
     this.setState({ createFail: false });
   }
-  //renders everything to do with workspaces, including creation
+  // renders everything to do with workspaces, including creation
   render() {
     let { changeCurrentWorkSpace, currentWorkSpaceId, workSpaces, currentUser } = this.props;
     let { createFail, createStatus, workSpaceQuery } = this.state;
@@ -77,7 +80,7 @@ export default class WorkSpaceList extends Component {
     );
   }
 }
-//required prop types
+// required prop types
 WorkSpaceList.propTypes = {
   workSpaces: PropTypes.array,
   currentWorkSpaceId: PropTypes.number,

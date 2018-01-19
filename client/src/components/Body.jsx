@@ -14,14 +14,14 @@ export default class Body extends React.Component {
   }
 
   render() {
-    let {
+    const {
       workSpaces,
       messages,
-      loadWorkSpaces,
       changeCurrentWorkSpace,
       currentWorkSpaceId,
       currentUser,
       workspaceMembers,
+      updateWorkSpaces,
     } = this.props;
     return (
       <Container fluid>
@@ -29,7 +29,7 @@ export default class Body extends React.Component {
           <Col className="side-bar-col" xs="2">
             <WorkSpaceList
               workSpaces={workSpaces}
-              loadWorkSpaces={loadWorkSpaces}
+              updateWorkSpaces={updateWorkSpaces}
               changeCurrentWorkSpace={changeCurrentWorkSpace}
               currentWorkSpaceId={currentWorkSpaceId}
               currentUser={currentUser}

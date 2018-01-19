@@ -32,6 +32,8 @@ export default class App extends React.Component {
     };
 
     this.timer = null;
+    
+    this.updateWorkSpaces = this.updateWorkSpaces.bind(this);
   }
 
   componentDidMount() {
@@ -126,11 +128,13 @@ export default class App extends React.Component {
   loadWorkSpaces() {
     fetch('/workspaces')
       .then(resp => resp.json())
-      .then(workSpaces => this.setState({ workSpaces }))
+      .then((workSpaces) => { this.updateWorkSpaces(workSpaces); })
       .catch(console.error);
   }
 
-
+  updateWorkSpaces(workSpaces) {
+    this.setState({ workSpaces });
+  }
 
   // Helper function to reassign current workspace
   changeCurrentWorkSpace(id, name) {
@@ -166,7 +170,7 @@ export default class App extends React.Component {
         <Body
           messages={messages}
           workSpaces={workSpaces}
-          loadWorkSpaces={() => this.loadWorkSpaces()}
+          updateWorkSpaces={this.updateWorkSpaces}
           changeCurrentWorkSpace={(id, name) => this.changeCurrentWorkSpace(id, name)}
           currentWorkSpaceId={currentWorkSpaceId}
           currentUser={this.props.location.state.username}
