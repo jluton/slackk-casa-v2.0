@@ -132,5 +132,18 @@ describe('Static Files', () => {
         });
     }).timeout(1000);
   });
+  describe('POST /upload', () => {
+    it('should upload file', (done) => {
+      chai
+        .request(server)
+        .post('/login')
+        .type('application/json')
+        .send(JSON.stringify({ username: 'test1234', password: 'test1234' }))
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          done();
+        });
+    }).timeout(1000);
+  });
 });
 after(() => process.exit(0));

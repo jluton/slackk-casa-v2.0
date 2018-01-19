@@ -63,6 +63,9 @@ export default class extends React.Component {
         float: 'left',
         marginRight: '7px',
       },
+      img: {
+        height: '200px',
+      }
     };
 
     return (
@@ -81,7 +84,14 @@ export default class extends React.Component {
             {message.username}
             <span style={styles.timeStamp}>{new Date(message.createdAt).toLocaleTimeString()}</span>
           </span>
-          <div style={styles.message}>{message.text}</div>
+          {message.text.slice(0, 10) === "https://s3" ? (
+            <div>
+              <div><b> {message.text} </b> </div>
+              <a href={message.text}>
+              <img id="messageEntry" src={message.text}/>
+              </a> 
+            </div>) : (<div> {message.text} </div> )}
+
         </Container>
       </div>
     );
