@@ -139,6 +139,7 @@ router.get('/workspaces', async (req, res) => {
 router.post('/workspaces', bodyParser.json());
 router.post('/workspaces', async (req, res) => {
   try {
+    // TODO - Can we prevent this using query construction to avoid redundant database call?
     let workspaces = await db.getWorkspaces();
     if (
       workspaces.find(workspace => workspace.name.toLowerCase() === req.body.name.toLowerCase())

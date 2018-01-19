@@ -87,19 +87,19 @@ describe('Static Files', () => {
           done();
         });
     }).timeout(1000);
-    // it('should respond with updated list of workspaces.', (done) => {
-    //   chai
-    //     .request(server)
-    //     .post('/workspaces')
-    //     .type('application/JSON')
-    //     .send(JSON.stringify({ name: 'ws_test321' }))
-    //     .end((err, res) => {
-    //       const body = res.json();
-    //       expect(body).to.be.an('array');
-    //       expect(body[0]).to.be.an('object');
-    //       done();
-    //     });
-    // }).timeout(1000);
+    it('should respond with updated list of workspaces.', (done) => {
+      chai
+        .request(server)
+        .post('/workspaces')
+        .type('application/JSON')
+        .send(JSON.stringify({ name: 'ws_test321' }))
+        .end((err, res) => {
+          const body = res.json();
+          expect(body).to.be.an('array');
+          expect(body[0]).to.be.an('object');
+          done();
+        });
+    }).timeout(1000);
   });
   describe('GET /workspaces', () => {
     it('should return a list of workspaces', (done) => {

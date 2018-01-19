@@ -15,9 +15,8 @@ export default class Signup extends React.Component {
     };
   }
 
-  
   signUp() {
-    //checks for validity
+    // checks for validity
     let {
       username, password, email, passwordHint,
     } = this.state;
@@ -30,7 +29,7 @@ export default class Signup extends React.Component {
     if (email === '') {
       return this.setState({ signupStatus: 'Enter an email' });
     }
-    //actual post to database
+    // post to database
     fetch('/signup', {
       method: 'POST',
       body: JSON.stringify({

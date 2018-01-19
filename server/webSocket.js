@@ -100,11 +100,10 @@ const onMessage = async (ws, wss, data) => {
       // It should update the work spaces object when a client changes workspace. test it out.
       try {
         const { username, currentWorkSpaceId, currentWorkSpaceName } = message.data;
-        // if client username has not be saved, save it to the websocket.
+        // save username if neccessary and update workspace object.
         if (ws.activeUserData.username === null) ws.activeUserData.username = username;
-        // update the workspace memory object
         updateWorkSpace(ws, currentWorkSpaceId);
-        // update the workspace on the websocket
+        // update the workspace properties on the websocket
         ws.activeUserData.currentWorkSpaceName = currentWorkSpaceName;
         ws.activeUserData.currentWorkSpaceId = currentWorkSpaceId;
         // respond back to client with success response and updated client active user info.
