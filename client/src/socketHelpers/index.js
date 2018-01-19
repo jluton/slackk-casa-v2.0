@@ -51,6 +51,7 @@ const sendMessage = (data) => {
 };
 
 const sendTypingState = (data) => {
+  console.log('sendTypingState runs on client');
   const { username, currentlyTyping, workspaceId } = data;
   const msg = {
     method: 'SENDTYPINGSTATE',
@@ -73,7 +74,6 @@ const sendCurrentWorkSpace = (data) => {
       currentWorkSpaceName,
     },
   };
-  console.log(msg);
   ws.send(JSON.stringify(msg));
 };
 
@@ -124,6 +124,16 @@ const afterConnect = () => {
         break;
       case 'POSTMESSAGE':
         addNewMessage(data);
+        break;
+      case 'SENDWORKSPACE':
+        console.log('event ', event);
+        console.log('SENDWORKSPACE response data ', JSON.parse(event.data));
+        break;
+      case 'SENDTYPINGSTATE':
+        console.log('SENDTYPINGSTATE response data ', JSON.parse(event.data));
+        break;
+      case 'USERCHANGEDTYPINGSTATE':
+        console.log('USERCHANGEDTYPINGSTATE response data ', JSON.parse(event.data));
         break;
       default:
     }

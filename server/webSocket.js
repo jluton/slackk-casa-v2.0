@@ -1,6 +1,6 @@
 const WebSocket = require('ws');
 
-const { updateWorkSpace } = require('./workSpaces');
+const { activeWorkSpaces, updateWorkSpace } = require('./workSpaces');
 const db = require('../database');
 
 // creates a response object for sending to clients
@@ -30,6 +30,17 @@ const updateEveryoneElse = (ws, wss, data) => {
   });
 };
 
+// sends data to all clients that share an active workspace with client ws
+const updateClientsUsingWorkspace = function (ws, data) {
+  const workSpaceUsers = activeWorkSpaces[ws.activeUserData.currentWorkSpaceId];
+  Object.keys(workSpaceUsers).forEach((user) => {
+    const client = workSpaceUsers[user];
+    if (client !== ws && client.readyState === WebSocket.OPEN) {
+      client.send(data);
+    }
+  });
+};
+
 // event handler for incoming data from any client
 const onMessage = async (ws, wss, data) => {
   let message;
@@ -52,7 +63,7 @@ const onMessage = async (ws, wss, data) => {
       } catch (err) {
         // respond back to client with error response and error message if messages can't be pulled from database
         return ws.send(response(400, err.stack, message.method));
-      }
+      }      
     case 'POSTMESSAGE':
     // method POSTMESSAGE posts a message to the workspace for the given workspaceId
       try {
@@ -85,7 +96,6 @@ const onMessage = async (ws, wss, data) => {
         // respond back to client with error response and error message if message can't be posted to database
         return ws.send(response(400, err.stack, message.method));
       }
-    
     case 'SENDWORKSPACE':
     // SENDWORKSPACE informs the server that the client's current workspace has changed.
     /*
@@ -96,6 +106,19 @@ const onMessage = async (ws, wss, data) => {
           currentWorkSpaceId: 3,
           currentWorkSpaceName: 'testSpace3',
       },
+
+      Response from server to client:
+      {
+        code: 201,
+        message: 'Post success',
+        method: 'CHANGEDWORKSPACE',
+        data: {
+          username: 'testuser',
+          currentlyTyping: true,
+          currentWorkSpaceName: 'testspace',
+          currentWorkSpaceId: 2,
+        },
+      }
     */
       // It should update the work spaces object when a client changes workspace. test it out.
       try {
@@ -107,12 +130,11 @@ const onMessage = async (ws, wss, data) => {
         ws.activeUserData.currentWorkSpaceName = currentWorkSpaceName;
         ws.activeUserData.currentWorkSpaceId = currentWorkSpaceId;
         // respond back to client with success response and updated client active user info.
-        return ws.send(response(201, 'Post success!', ws.activeUserData));
+        return ws.send(response(201, 'Post success', message.method, ws.activeUserData));
       } catch (err) {
         // respond back to client with error response and error message if workspace can't be updated.
         return ws.send(response(400, err.stack, message.method));
       }
-
     case 'SENDTYPINGSTATE':
     // SENDTYPINGSTATE informs the server that the client's currentlyTyping state has changed.
     /*
@@ -125,9 +147,36 @@ const onMessage = async (ws, wss, data) => {
         },
       }
     */
-      ws.currentlyTyping = message.data.currentlyTyping;
-      console.log(ws);
-      return ws.send(response(201));
+      try {
+        console.log('typing state received, ', message);
+        ws.activeUserData.currentlyTyping = message.data.currentlyTyping;
+        // Inform user that currentlyTyping post was successful.
+        ws.send(response(201, 'Post success', message.method, ws.activeUserData));
+  
+        // notify all other connected clients that a new message has been posted with a NEWMESSAGE response
+        /*
+        Response from server to many clients:
+        {
+          method: 'USERCHANGEDTYPINGSTATE',
+          data: {  //send the currentlyTyping to all other clients that share the workspace.
+            message: {
+              id: 1,
+              text: 'test message',
+              username: 'testUser',
+              createdAt: '2018-01-15T20:15:29.269Z',
+            },
+            workspaceId: 1,
+          },
+        }
+        */
+        return updateClientsUsingWorkspace(
+          ws,
+          response(200, 'User Changed Typing State', 'USERCHANGEDTYPINGSTATE', ws.activeUserData),
+        );
+      } catch (err) {
+        console.error('error in SENDTYPINGSTATE or USERCHANGEDTYPINGSTATE', err);
+        return ws.send(response(400, err.stack, message.method));
+      }
 
     default:
       // unknown message sent to server, respond back to client

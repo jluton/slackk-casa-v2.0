@@ -19,4 +19,4 @@ const wss = new WebSocketServer({ server });
 // event handler for each client connection, passes to webSocket.js helpers
 wss.on('connection', ws => onConnect(ws, wss));
 
-module.exports = { server };
+module.exports = server;
