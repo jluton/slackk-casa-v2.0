@@ -29,6 +29,7 @@ export default class App extends React.Component {
       currentWorkSpaceId: 0,
       currentWorkSpaceName: '',
       currentlyTyping: false,
+      typingUser: null,
     };
 
     this.timer = null;
@@ -117,10 +118,12 @@ export default class App extends React.Component {
         workspaceMembers: [],
 
       });
-      // resets text box to blank string
+      // resets text box and currentlyTyping data
       this.setState({
         query: '',
+        currentlyTyping: false,
       });
+      this.timer = null;
     }
   }
 

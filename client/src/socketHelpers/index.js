@@ -1,3 +1,5 @@
+import { setTimeout } from 'timers';
+
 const { incomingMessageNotification } = require('./../helpers.js');
 
 let ws = null;
@@ -28,6 +30,12 @@ const addNewMessage = (message) => {
 // takes in an array of users and sets the current app state
 const setUsers = (users) => {
   app.setState({ users });
+};
+
+const setTypingUser = (user) => {
+  app.setState({
+    typingUser: user.currentlyTyping ? user.username : null,
+  });
 };
 
 // takes in a parameter and sends that parameter to the socket server
@@ -116,6 +124,7 @@ const afterConnect = () => {
         loadMessages(data);
         break;
       case 'NEWMESSAGE':
+        // If message is from currently typing user, reset app typingUser state.
         incomingMessageNotification(data);
         filterMsgByWorkSpace(data);
         break;
@@ -126,14 +135,19 @@ const afterConnect = () => {
         addNewMessage(data);
         break;
       case 'SENDWORKSPACE':
-        console.log('event ', event);
-        console.log('SENDWORKSPACE response data ', JSON.parse(event.data));
+        if (code !== 201) {
+          console.log('Error! Server did not log current workspace. You should still be able to send messages.');
+        }
         break;
       case 'SENDTYPINGSTATE':
-        console.log('SENDTYPINGSTATE response data ', JSON.parse(event.data));
+        if (code !== 201) {
+          console.log('Error! Server did not recognize client\'s typing state change');
+        }
         break;
       case 'USERCHANGEDTYPINGSTATE':
         console.log('USERCHANGEDTYPINGSTATE response data ', JSON.parse(event.data));
+        setTypingUser(data);
+        // Change app state
         break;
       default:
     }
