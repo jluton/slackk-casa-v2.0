@@ -17,18 +17,24 @@ const generateWorkSpaceMemory = async function () {
   }
 };
 
-setTimeout(() => {
-  console.log('creates active work spaces: ', activeWorkSpaces);
-}, 3000);
-
+// Updates a user's position in the activeWorkSpace object
 const updateWorkSpace = function (ws, newWorkSpaceId) {
-  //updates work space, but username is null
   const { currentWorkSpaceId, username } = ws.activeUserData;
   if (currentWorkSpaceId !== null && activeWorkSpaces[currentWorkSpaceId][username]) {
     delete activeWorkSpaces[currentWorkSpaceId][username];
   }
   activeWorkSpaces[newWorkSpaceId][username] = ws;
-  console.log('updated active workspaces', activeWorkSpaces);
 };
 
-module.exports = { generateWorkSpaceMemory, activeWorkSpaces, updateWorkSpace };
+// Creates a new property on activeWorkSpaces for a new workspace
+const createNewWorkSpaceObject = function (id) {
+  console.log('new workspace object: ', id);
+  activeWorkSpaces[id] = {};
+};
+
+module.exports = {
+  generateWorkSpaceMemory,
+  activeWorkSpaces,
+  updateWorkSpace,
+  createNewWorkSpaceObject,
+};

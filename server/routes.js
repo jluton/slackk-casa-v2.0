@@ -9,6 +9,8 @@ const auth = require('./auth');
 const passport = require('./passport');
 const email = require('./email');
 const aws = require('../server/aws.js');
+const { createNewWorkSpaceObject } = require('./workSpaces');
+
 /*
   Express routes
 */
@@ -140,14 +142,21 @@ router.post('/workspaces', bodyParser.json());
 router.post('/workspaces', async (req, res) => {
   try {
     // TODO - Can we prevent this using query construction to avoid redundant database call?
+    const { name } = req.body;
     let workspaces = await db.getWorkspaces();
     if (
-      workspaces.find(workspace => workspace.name.toLowerCase() === req.body.name.toLowerCase())
+      workspaces.find(workspace => workspace.name.toLowerCase() === name.toLowerCase())
     ) {
       return res.status(400).json('workspace exists');
     }
-    await db.createWorkspace(req.body.name);
+    // create the new workspace
+    await db.createWorkspace(name);
+    // grab updated list of workspaces
     workspaces = await db.getWorkspaces();
+    // create active workspace object
+    const createdId = workspaces.filter(workspace => workspace.name === name)[0].id;
+    createNewWorkSpaceObject(createdId);
+    // send workspace list back to client
     return res.status(201).json(workspaces);
   } catch (err) {
     return res.status(500).json(err.stack);
