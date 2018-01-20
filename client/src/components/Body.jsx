@@ -25,7 +25,6 @@ export default class Body extends React.Component {
       typingUser,
     } = this.props;
 
-    const userTypingNotification = typingUser !== null ? `${typingUser} is typing...` : ' ';
 
     return (
       <Container fluid>

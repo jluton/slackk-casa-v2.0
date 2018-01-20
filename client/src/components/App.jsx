@@ -6,6 +6,7 @@ import NavBar from './NavBar.jsx';
 import MessageList from './MessageList.jsx';
 import Body from './Body.jsx';
 import SendFiles from './SendFiles.jsx';
+import UserTypingNotification from './UserTypingNotification.jsx';
 
 // The main component of the App. Renders the core functionality of the project.
 export default class App extends React.Component {
@@ -35,6 +36,8 @@ export default class App extends React.Component {
     this.timer = null;
     
     this.updateWorkSpaces = this.updateWorkSpaces.bind(this);
+    this.handleFileSubmit = this.handleFileSubmit.bind(this);
+    this.handleFileChange = this.handleFileChange.bind(this);
   }
 
   componentDidMount() {
@@ -49,7 +52,7 @@ export default class App extends React.Component {
 
   handleFileSubmit(event) {
     event.preventDefault();
-    let { file } = this.state;
+    const { file } = this.state;
     this.fileUpload(file)
       .then((response) => {
         console.log('success!');
@@ -60,6 +63,7 @@ export default class App extends React.Component {
         });
       });
   }
+
   // fileUpload function thanks to Ashik Nesin: https://github.com/AshikNesin/axios-fileupload
   fileUpload(file) {
    const url = '/upload';
@@ -166,6 +170,10 @@ export default class App extends React.Component {
 
     const { username } = this.props.location.state;
 
+    const userTypingNotification = typingUser !== null ? 
+      <UserTypingNotification typingUser={typingUser} /> : ' ';
+
+
     return (
       <div className="app-container">
         <NavBar
@@ -184,9 +192,14 @@ export default class App extends React.Component {
           typingUser={typingUser}
           workspaceMembers={workspaceMembers}
         />
+        <div className="console-container">
+          <SendFiles
+            fileSubmit={this.handleFileSubmit}
+            change={this.handleFileChange}
+          />
+          <UserTypingNotification typingUser={typingUser} />
+        </div>
         <div className="input-container">
-          <SendFiles fileSubmit={this.handleFileSubmit.bind(this)} change={this.handleFileChange.bind(this)}/>
-
           <Input
             value={query}
             className="message-input-box"

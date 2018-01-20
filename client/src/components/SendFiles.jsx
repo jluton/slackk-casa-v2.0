@@ -38,7 +38,7 @@ export default class SendFiles extends React.Component {
   //Renders the button. When clicked, the button will toggle the popup.
   render() {
     return (
-      <div>
+      <span>
         <Button id="Popover2" onClick={this.toggle}>
           +
         </Button>
@@ -56,7 +56,7 @@ export default class SendFiles extends React.Component {
             </form>
           </PopoverBody>
         </Popover>
-      </div>
+      </span>
     );
   }
 }
