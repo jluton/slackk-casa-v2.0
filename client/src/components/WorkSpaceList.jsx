@@ -62,17 +62,18 @@ export default class WorkSpaceList extends Component {
             />
           </Col>
         </Row>
-        {workSpaces.map(workSpace => (
-          <WorkSpaceEntry
-            workSpace={workSpace}
-            handleFail={() => this.handleFail}
-            key={workSpace.id}
-            changeCurrentWorkSpace={changeCurrentWorkSpace}
-            currentWorkSpaceId={currentWorkSpaceId}
-            currentUser={currentUser}
-
-          />
-        ))}
+        <div className="workSpace-list-container">
+          {workSpaces.map(workSpace => (
+            <WorkSpaceEntry
+              workSpace={workSpace}
+              handleFail={() => this.handleFail}
+              key={workSpace.id}
+              changeCurrentWorkSpace={changeCurrentWorkSpace}
+              currentWorkSpaceId={currentWorkSpaceId}
+              currentUser={currentUser}
+            />
+          ))}
+        </div>
         <br />
         <br />
         {createFail ? <Alert color="danger"> Failed to create workspace </Alert> : undefined}
