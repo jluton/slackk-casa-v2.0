@@ -1,6 +1,6 @@
 import { setTimeout } from 'timers';
 
-const { incomingMessageNotification } = require('./../helpers.js');
+// const { incomingMessageNotification } = require('./../helpers.js');
 
 let ws = null;
 let app = null;
@@ -96,6 +96,7 @@ const getWorkSpaceMessagesFromServer = (id) => {
 // takes in new messages and filters and concats messages that match the current workSpace
 // resets typing user state
 const filterMsgByWorkSpace = (msg) => {
+  console.log('filterMsgByWorkSpace called ', msg);
   if (sent) {
     sent = false;
   } else {
@@ -106,6 +107,21 @@ const filterMsgByWorkSpace = (msg) => {
       messages: [...app.state.messages, msg.message],
       typingUser: null,
     });
+  }
+};
+
+// Takes in NEWMESSAGE data and then creates a browser notification.
+const incomingMessageNotification = (data) => {
+  // Checks if browser has permission to display notifications. 
+  if (!('Notification' in window)) {
+    console.log('This browser does not support desktop notification');
+  } else if (Notification.permission !== 'denied' && Notification.permission !== 'granted') {
+    Notification.requestPermission();
+  // If permission is granted, create a message notification.
+  } else if (Notification.permission === 'granted') {
+    const { username, text } = data.message;
+    const workspaceName = app.state.workSpaces.filter(workspace => workspace.id === data.workspaceId)[0].name;
+    return new Notification(`New message from ${username} in #${workspaceName}: ${text}`);
   }
 };
 

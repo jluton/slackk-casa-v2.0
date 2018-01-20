@@ -76,19 +76,10 @@ export default class App extends React.Component {
    }
    return post(url, formData, config)
  }
- 
-  turnOffTyping() {
-    sendTypingState({
-      username: this.props.location.state.username,
-      currentlyTyping: false,
-      workspaceId: this.state.currentWorkSpaceId,
-    });
-    this.setState({ currentlyTyping: false });
-  }
 
-  // Handle changes to current query value and currentlyTyping 
-  handleChange(event) {
-    // clear any timers set reset currentlyTyping
+  // Informs the server that the user is typing and sets a timer to reset.
+  handleTyping(query) {
+    // clear any previously set timers.
     clearTimeout(this.timer);
     // if not already typing, send change to server
     if (!this.state.currentlyTyping) {
@@ -98,14 +89,38 @@ export default class App extends React.Component {
         workspaceId: this.state.currentWorkSpaceId,
       });
     }
+
     // changes the query state based on user input in text field
     // sets user as currently typing
     this.setState({
-      query: event.target.value,
+      query,
       currentlyTyping: true,
     });
-    // set a timer to reset currentlyTyping back to false.
-    this.timer = setTimeout(this.turnOffTyping.bind(this), 8000);
+    // set a timer to reset currentlyTyping back to false after a period of inactivity.
+    this.timer = setTimeout(this.turnOffTyping.bind(this), 5000);
+  }
+
+  turnOffTyping() {
+    sendTypingState({
+      username: this.props.location.state.username,
+      currentlyTyping: false,
+      workspaceId: this.state.currentWorkSpaceId,
+    });
+    this.setState({ currentlyTyping: false });
+  }
+
+  // Handle changes to current query value and currentlyTyping
+  handleChange(event) {
+    const query = event.target.value;
+    
+    // If user is on a workspace, handle currentlyTyping. If not, just change the query state.
+    if (this.state.currentWorkSpaceId > 0) {
+      this.handleTyping(query);
+    } else {
+      this.setState({
+        query,
+      });
+    }
   }
 
   // sends message on enter key pressed and clears form
@@ -163,6 +178,8 @@ export default class App extends React.Component {
 
   // renders nav bar, body(which contains all message components other than input), and message input
   render() {
+    console.log('rendering ', this.state.messages);
+
     const {
       messages, query, workSpaces, currentWorkSpaceId, 
       currentWorkSpaceName, workspaceMembers, typingUser
