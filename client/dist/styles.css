@@ -19,13 +19,15 @@
   background-color: #4d394b;
 }
 
+.message-list-container {
+  overflow: scroll;
+  display: flex;
+  flex-direction: column-reverse;
+}
+
 /* right side */
 .message-list-col {
   height: 75vh;
-  overflow: scroll;
-}
-
-.message-list-container {
   overflow: scroll;
 }
 
