@@ -52,9 +52,6 @@ export default class Body extends React.Component {
                 currentUser={currentUser}
                 workspaceMembers={workspaceMembers}
               />
-              <div className="typing-notification">
-                {userTypingNotification}
-              </div>
               <MessageList
                 messages={messages}
                 currentWorkSpaceId={currentWorkSpaceId}
