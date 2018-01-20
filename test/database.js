@@ -1,4 +1,4 @@
-const { expect } = require('chai');
+const { expect, be } = require('chai');
 const { Client } = require('pg');
 const db = require('../database');
 
@@ -114,12 +114,19 @@ describe('Database', () => {
         .then((data) => {
           expect(data).to.equal(true);
         })
+        .then(() => db.getMembers(0))
+        .then(data => expect(data.indexOf('test')).to.not.equal(-1))
         .then(() => db.joinWorkspace('test', 0, 'drop'))
         .then(() => db.isInWorkspace('test', 0))
         .then((data) => {
           expect(data).to.equal(false);
+        })
+        .then(() => db.getMembers(0))
+        .then(data => {
+          expect(data.indexOf('test')).to.equal(-1)
           done();
         });
-    }).timeout(3000);
-  });
+  }).timeout(4000);
+});
+
 });

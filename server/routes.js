@@ -197,4 +197,15 @@ router.post('/upload', (req, res) => {
   })
 })
 
+router.get('/workspaces/:id/members', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const users = await db.getMembers(id);
+    return res.status(200).send(JSON.stringify(users));
+  } catch (err) {
+    return res.status(404).json(err.stack);
+  }
+});
+
+
 module.exports = router;

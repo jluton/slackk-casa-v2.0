@@ -85,6 +85,8 @@ export default class App extends React.Component {
         text: this.state.query,
         workspaceId: this.state.currentWorkSpaceId,
         isImage: false,
+        workspaceMembers: [],
+
       });
       // resets text box to blank string
       this.setState({
@@ -101,14 +103,20 @@ export default class App extends React.Component {
       .catch(console.error);
   }
 
+
+
   // Helper function to reassign current workspace
   changeCurrentWorkSpace(id, name) {
     this.setState({ currentWorkSpaceId: id, currentWorkSpaceName: name });
+
+    axios.get(`/workspaces/${id}/members`)
+      .then(data => this.setState({ workspaceMembers: data.data }))
   }
   // renders nav bar, body(which contains all message components other than input), and message input
   render() {
     const {
-      messages, query, workSpaces, currentWorkSpaceId, currentWorkSpaceName,
+      messages, query, workSpaces,
+      currentWorkSpaceId, currentWorkSpaceName, workspaceMembers
     } = this.state;
     return (
       <div className="app-container">
@@ -116,6 +124,7 @@ export default class App extends React.Component {
           currentWorkSpaceName={currentWorkSpaceName}
           currentWorkSpaceId={currentWorkSpaceId}
           currentUser={this.props.location.state.username}
+          workspaceMembers={workspaceMembers}
         />
         <Body
           messages={messages}
@@ -124,6 +133,7 @@ export default class App extends React.Component {
           changeCurrentWorkSpace={(id, name) => this.changeCurrentWorkSpace(id, name)}
           currentWorkSpaceId={currentWorkSpaceId}
           currentUser={this.props.location.state.username}
+          workspaceMembers={workspaceMembers}
         />
         <div className="input-container">
           <SendFiles fileSubmit={this.handleFileSubmit.bind(this)} change={this.handleFileChange.bind(this)}/>

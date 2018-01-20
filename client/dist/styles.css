@@ -25,6 +25,10 @@
   overflow: scroll;
 }
 
+.message-list-container {
+  overflow: scroll;
+}
+
 /* send message div container */
 .input-container {
   height: 25vh;
