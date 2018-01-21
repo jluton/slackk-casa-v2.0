@@ -38,6 +38,7 @@
 
 .user-typing-notification {
   margin-left: 3%;
+  display: inline-block;
 }
 
 /* send message div container */
